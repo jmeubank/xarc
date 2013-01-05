@@ -147,7 +147,7 @@ xarc_result_t m_zip_item_get_info(xarc* x, xarc_item_info* info)
 
 	memset(info, 0, sizeof(xarc_item_info));
 
-	info->path.native = M_ZIP(x)->item_path;
+	info->path = M_ZIP(x)->item_path;
 
 	if (M_ZIP(x)->item_path[ufi.size_filename - 1] == '/'
 	 || ((ufi.version >> 8 == 0 || ufi.version >> 8 == 10) && (ufi.external_fa & 0x0010)))

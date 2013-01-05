@@ -294,7 +294,7 @@ xarc_result_t m_untar_next_item(xarc* x)
 
 xarc_result_t m_untar_item_get_info(xarc* x, xarc_item_info* info)
 {
-	info->path.native = M_UNTAR(x)->entry_path;
+	info->path = M_UNTAR(x)->entry_path;
 	info->properties = M_UNTAR(x)->entry_properties;
 	filesys_time_unix(M_UNTAR(x)->entry_time, &info->mod_time);
 	return XARC_OK;

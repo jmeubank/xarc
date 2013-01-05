@@ -1,7 +1,8 @@
-/** \file xarc_impl.h
- *
- * Created: JohnE, 2010-07-19
+/* File: libxarc/xarc_impl.h
+ * XARC implementation details.
  */
+/* Created: JohnE, 2010-07-19 */
+
 #ifndef XARC_IMPL_H_INC
 #define XARC_IMPL_H_INC
 
@@ -74,7 +75,9 @@ xarc_result_t xarc_set_error_filesys(xarc* x, const xchar* addl_fmt, ...);
 
 #define XARC_DEFINE_MODULE(name, open_func, extra_size) \
  const size_t XCONCAT2(xarc_extra_size_, name) = extra_size; \
- xarc_result_t (*XCONCAT2(xarc_open_func_, name))(xarc*, const xchar*, uint8_t) = open_func;
+ xarc_result_t (*XCONCAT2(xarc_open_func_, name)) \
+ (xarc*, const xchar*, uint8_t) \
+  = open_func;
 
 
 #ifdef __cplusplus

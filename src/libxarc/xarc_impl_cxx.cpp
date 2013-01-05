@@ -1,10 +1,11 @@
-/* File: xarc.hpp
- * The xarc C++ implementation.
+/* File: libxarc/xarc_impl_cxx.cpp
+ * The XARC C++ implementation.
  */
 /* Created: JohnE, 2013-01-04 */
 
 
 #include <xarc.hpp>
+#include <xarc/xarc_exception.hpp>
 #include <cassert>
 
 
@@ -45,7 +46,7 @@ std::pair< uintmax_t, uint32_t > ExtractItemInfo::GetModTime() const
 ExtractItemInfo::ExtractItemInfo(const xarc_item_info* info)
 {
 	m_info = *info;
-	m_path = m_info.path.native;
+	m_path = m_info.path;
 }
 
 
@@ -55,8 +56,9 @@ ExtractArchive::ExtractArchive()
 }
 
 ExtractArchive::ExtractArchive(const xchar* file, uint8_t type)
- : m_xarc(xarc_open(file, type))
+ : m_xarc(0)
 {
+	this->OpenFile(file, type);
 }
 
 ExtractArchive::~ExtractArchive()
@@ -115,6 +117,13 @@ StringType ExtractArchive::GetErrorAdditional() const
 	return StringType(xarc_error_additional(m_xarc));
 }
 
+
+xarc_result_t ExtractArchive::OpenFile(const xchar* file, uint8_t type)
+{
+	if (m_xarc)
+		xarc_close(m_xarc);
+	m_xarc = xarc_open(file, type);
+}
 
 xarc_result_t ExtractArchive::NextItem()
 {

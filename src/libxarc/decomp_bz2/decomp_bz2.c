@@ -1,8 +1,7 @@
-/* File: decomp_bz2.c
- * Created: JohnE, 2010-08-08
- *
+/* File: libxarc/decomp_bz2/decomp_bz2.c
  * Implements BZIP2 decompression.
  */
+/* Created: JohnE, 2010-08-08 */
 
 #include "build.h"
 

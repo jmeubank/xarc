@@ -75,13 +75,23 @@
 					<Add library="lzma" />
 				</Linker>
 			</Target>
+			<Target title="docs">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<ExtraCommands>
+					<Add after="$(#naturaldocs)\NaturalDocs.bat -i $(PROJECTDIR) -o FramedHTML $(PROJECTDIR)\doc -p $(PROJECTDIR)\doc\ndproj" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="all" targets="7z_min;zlib_min;bz2_min;libxarc;xtest;libxarc_cxx;" />
+			<Add alias="all" targets="7z_min;zlib_min;bz2_min;libxarc;libxarc_cxx;xtest;docs;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-O2" />
 			<Add option="-g" />
+			<Add option="-DUNICODE=1" />
+			<Add option="-D_UNICODE=1" />
 			<Add directory="$(#xz)/include" />
 			<Add directory="include" />
 		</Compiler>
@@ -101,8 +111,17 @@
 		<Unit filename="include/xarc.hpp">
 			<Option target="libxarc_cxx" />
 		</Unit>
+		<Unit filename="include/xarc/extract_helpers.hpp">
+			<Option target="libxarc_cxx" />
+		</Unit>
+		<Unit filename="include/xarc/string_type.hpp">
+			<Option target="libxarc_cxx" />
+		</Unit>
 		<Unit filename="include/xarc/types.inc">
 			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="include/xarc/xarc_exception.hpp">
+			<Option target="libxarc_cxx" />
 		</Unit>
 		<Unit filename="include/xarc/xchar.h">
 			<Option target="libxarc" />
@@ -292,6 +311,9 @@
 		<Unit filename="src/third-party/zlib/zutil.c">
 			<Option compilerVar="CC" />
 			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/xtest/mingw-unicode.inc">
+			<Option target="xtest" />
 		</Unit>
 		<Unit filename="src/xtest/xtest.cpp">
 			<Option target="xtest" />

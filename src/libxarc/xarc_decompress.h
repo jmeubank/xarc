@@ -1,23 +1,17 @@
-/* -- xarc_decompress.h --
- * Created: JohnE, 2010-08-02
- */
-
-/* Title: XARC decompressors
+/* File: libxarc/xarc_decompress.h
  * A common interface for decompressing a compressed input file.
  *
  * A decompressor in XARC is a set of functions implementing a common interface
  * that reads decompressed data from a compressed input file. An XARC
  * decompressor must implement an open function (see <decomp_open_func>) and
  * use the <XARC_DEFINE_DECOMPRESSOR> macro to link it to a declared 2-phase
- * archive type from <modules.inc>. The open function is responsible for
+ * archive type from <libxarc/modules.inc>. The open function is responsible for
  * creating an object that extends <xarc_decompress_impl>, and populating the
  * base portion of it with appropriate functions for reading data, closing the
  * stream, and retrieving error text.
  */
+/* Created: JohnE, 2010-08-02 */
 
-/* File: xarc_decompress.h
- * Interface for implementing specific decompression formats.
- */
 #ifndef XARC_DECOMPRESS_H_INC
 #define XARC_DECOMPRESS_H_INC
 
@@ -40,14 +34,14 @@ struct _xarc_decompress_impl;
  * assign the pointer to the "impl_out" parameter.
  *
  * Parameters:
- *   x - The xarc object being used (for setting errors)
+ *   x - The <xarc> object being used (for setting errors)
  *   path - Path to the file to open for decompression
  *   impl_out - If the file is successfully opened for decompression, will be
  *     set to point to an object that extends <xarc_decompress_impl>
  *
  * Returns:
  *   XARC_OK - If the file was successfully opened for decompression
- *   <xarc_result_t> - Any error that occurred
+ *   <xarc_result_t> - Any error that occurred (see <XARC result codes>)
  */
 typedef xarc_result_t (*decomp_open_func)(xarc* x, const xchar* path,
  struct _xarc_decompress_impl** impl_out);
@@ -69,7 +63,7 @@ typedef struct _xarc_decompress_impl
 	 * Read decompressed data from the stream.
 	 *
 	 * Parameters:
-	 *   x - The xarc object being used (for setting errors)
+	 *   x - The <xarc> object being used (for setting errors)
 	 *   impl - Pointer to an object extending <xarc_decompress_impl>
 	 *   buffer - Output buffer for decompressed data
 	 *   read_inout - Pointer to a size_t that contains the amount of data
@@ -80,7 +74,8 @@ typedef struct _xarc_decompress_impl
 	 *   XARC_OK - If the full amount of data requested was provided
 	 *   XARC_DECOMPRESS_EOF - If the end of the decompression stream was
 	 *     reached before all requested data could be decompressed
-	 *   <xarc_result_t> - Any other error that occurred
+	 *   <xarc_result_t> - Any other error that occurred (see <XARC result
+	 *     codes>)
 	 */
 	xarc_result_t (*read)(xarc* x, struct _xarc_decompress_impl* impl,
 	 void* buffer, size_t* read_inout);
@@ -107,7 +102,7 @@ typedef struct _xarc_decompress_impl
  * Open a file for decompression reading.
  *
  * Parameters:
- *   x - The xarc object being used (for setting errors)
+ *   x - The <xarc> object being used (for setting errors)
  *   path - Path to the file to open
  *   decomp_type - ID specifying the type of compression on the file (see
  *     <Decompression types>)
@@ -116,7 +111,7 @@ typedef struct _xarc_decompress_impl
  *
  * Returns:
  *   XARC_OK - If the file was successfully opened for decompression
- *   <xarc_result_t> - Any error that occurred
+ *   <xarc_result_t> - Any error that occurred (see <XARC result codes>)
  */
 xarc_result_t xarc_decompress_open(xarc* x, const xchar* path,
  uint8_t decomp_type, xarc_decompress_impl** impl_out);
@@ -129,7 +124,7 @@ xarc_result_t xarc_decompress_open(xarc* x, const xchar* path,
 
 /* Macro: XARC_DEFINE_DECOMPRESSOR
  * This macro is used in the decompressor implementations to link the impl to
- * a known 2-phase decompression type from modules.inc.
+ * a known 2-phase decompression type from <libxarc/modules.inc>.
  */
 #define XARC_DEFINE_DECOMPRESSOR(name, open_func) \
  decomp_open_func XCONCAT2(xarc_decomp_open_func_, name) = open_func;

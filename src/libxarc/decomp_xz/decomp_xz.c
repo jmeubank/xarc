@@ -1,9 +1,7 @@
-/* File: decomp_xz.c
- * Created: JohnE, 2012-01-01
- *
+/* File: libxarc/decomp_xz/decomp_xz.c
  * Implements LZMA and XZ decompression.
  */
-
+/* Created: JohnE, 2013-01-01 */
 
 #include <inttypes.h>
 #include <malloc.h>

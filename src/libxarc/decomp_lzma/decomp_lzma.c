@@ -1,8 +1,7 @@
-/* File: decomp_lzma.c
- * Created: JohnE, 2010-08-08
- *
+/* File: libxarc/decomp_lzma/decomp_lzma.c
  * Implements LZMA decompression.
  */
+/* Created: JohnE, 2010-08-08 */
 
 
 #include <stdio.h>

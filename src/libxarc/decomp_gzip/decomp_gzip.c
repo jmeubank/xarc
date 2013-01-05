@@ -1,8 +1,7 @@
-/* File: decomp_gzip.c
- * Created: JohnE, 2010-08-05
- *
+/* File: libxarc/decomp_gzip/decomp_gzip.c
  * Implements GZIP decompression.
  */
+/* Created: JohnE, 2010-08-05 */
 
 #include "build.h"
 

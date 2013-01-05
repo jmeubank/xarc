@@ -1,3 +1,16 @@
+/* File: libxarc/modules.inc
+ * The central directory for the modules XARC uses to handle individual archive
+ * types.
+ */
+
+/* Macros: XARC modules
+ * A list of all the archive modules included in XARC.
+ *
+ * mod_minizip - Handles ZIP archives.
+ * mod_untar - Handles any type of compressed tarball, using <XARC
+ *   decompressors>.
+ * mod_7z - Handles 7-Zip archives.
+ */
 
 XARC_MODULE_BEGIN(mod_minizip)
 	XARC_HANDLE_1PHASE(XARC_ZIP)

@@ -195,7 +195,7 @@ int8_t xarc_ok(xarc* x)
 	return (X_BASE(x)->error) ? 0 : 1;
 }
 
-int32_t xarc_error_id(xarc* x)
+xarc_result_t xarc_error_id(xarc* x)
 {
 	return X_BASE(x)->error ? X_BASE(x)->error->xarc_id : 0;
 }
@@ -285,7 +285,7 @@ xarc_result_t xarc_item_extract(xarc* x, const xchar* base_path, uint8_t flags,
 		return ret;
 
 	size_t base_len = xstrlen(base_path);
-	size_t item_len = xstrlen(xi.path.native);
+	size_t item_len = xstrlen(xi.path);
 	// Allocate buffer to hold full item path
 	xchar* full_path = malloc(sizeof(xchar) * (base_len + item_len + 2));
 	// Copy base path to buffer
@@ -297,7 +297,7 @@ xarc_result_t xarc_item_extract(xarc* x, const xchar* base_path, uint8_t flags,
 		++base_len;
 	}
 	// Copy item path after base path in buffer
-	xstrcpy(full_path + base_len, xi.path.native);
+	xstrcpy(full_path + base_len, xi.path);
 
 	// Get directory portion of item path: dir_stop will be the index of the
 	// last char in the path's directory portion

@@ -1,9 +1,9 @@
-/* File: filesys.h
- * Created: JohnE, 2010-08-02
- *
+/* File: libxarc/filesys.h
  * Platform-independent wrappers for the local file system and string
  * localization functions.
  */
+/* Created: JohnE, 2010-08-02 */
+
 #ifndef FILESYS_H_INC
 #define FILESYS_H_INC
 

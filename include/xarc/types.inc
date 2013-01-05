@@ -1,3 +1,24 @@
+/* File: xarc/types.inc
+ * The central directory for the types of archives XARC recognizes.
+ */
+
+/* Macros: XARC archive types
+ * A list of all the archive types supported by XARC.
+ *
+ * (0) "Autodetect" - Determine the type of archive from the file extension
+ * (1) XARC_ZIP - A "zip archive", using GZIP compression (.zip)
+ * (2) XARC_TAR_GZ - A "GZIP tarball", archived with TAR and using GZIP
+ *   compression (.tar.gz, .tgz)
+ * (3) XARC_TAR_BZ2 - A "BZIP2 tarball", archived with TAR and using BZIP2
+ *   compression (.tar.bz2, .tbz)
+ * (4) XARC_TAR_LZMA - An "LZMA tarball", archived with TAR and using LZMA
+ *   compression (.tar.lzma, .tlz)
+ * (5) XARC_TAR_LZMA - A "7-Zip archive", using LZMA compression and optional
+ *   filters (.7z)
+ * (6) XARC_TAR_XZ - An "XZ tarball", archived with TAR and using LZMA
+ *   compression and optional filters (.tar.xz, .txz)
+ */
+
 XARC_TYPE_BEGIN(1, XARC_ZIP)
 	XARC_EXTENSION("zip")
 XARC_TYPE_END()
@@ -9,6 +30,7 @@ XARC_TYPE_END()
 
 XARC_TYPE_BEGIN(3, XARC_TAR_BZ2)
 	XARC_EXTENSION("tar.bz2")
+	XARC_EXTENSION("tbz")
 XARC_TYPE_END()
 
 XARC_TYPE_BEGIN(4, XARC_TAR_LZMA)

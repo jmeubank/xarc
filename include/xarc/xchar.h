@@ -1,6 +1,8 @@
-/* File: xchar.h
- * Created: JohnE, 2010-09-04
+/* File: xarc/xchar.h
+ * Flexible character types for XARC.
  */
+/* Created: JohnE, 2010-09-04 */
+
 #ifndef XCHAR_H_INC
 #define XCHAR_H_INC
 

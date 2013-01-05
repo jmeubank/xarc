@@ -157,7 +157,7 @@ xarc_result_t m_7z_item_get_info(xarc* x, xarc_item_info* info)
 		free(path16);
 #endif
 	}
-	info->path.native = M_7Z(x)->entry_path;
+	info->path = M_7Z(x)->entry_path;
 
 	if (M_7Z(x)->db.db.Files[M_7Z(x)->entry].IsDir)
 		info->properties = XARC_PROP_DIR;

@@ -1,4 +1,4 @@
-/* File: build.h
+/* File: libxarc/build.h
  * Build-time macros.
  */
 /* Created: JohnE, 2013-01-03 */
