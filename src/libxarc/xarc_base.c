@@ -195,6 +195,11 @@ int8_t xarc_ok(xarc* x)
 	return (X_BASE(x)->error) ? 0 : 1;
 }
 
+int32_t xarc_error_id(xarc* x)
+{
+	return X_BASE(x)->error ? X_BASE(x)->error->xarc_id : 0;
+}
+
 int32_t xarc_library_error_id(xarc* x)
 {
 	return X_BASE(x)->error ? X_BASE(x)->error->library_error_id : 0;

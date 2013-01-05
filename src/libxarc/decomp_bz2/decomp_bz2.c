@@ -152,6 +152,11 @@ xarc_result_t d_bz2_read(xarc* x, xarc_decompress_impl* impl, void* buf,
 			return xarc_set_error_filesys(x,
 			 XC("Error while reading BZIP2 data"));
 		}
+		else if (bzerror == BZ_DATA_ERROR_MAGIC)
+		{
+			return xarc_set_error(x, XARC_DECOMPRESS_ERROR, bzerror,
+			 XC("Invalid BZIP2 stream"));
+		}
 		else
 		{
 #if XARC_NATIVE_WCHAR

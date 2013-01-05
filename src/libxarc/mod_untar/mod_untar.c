@@ -140,7 +140,10 @@ static xarc_result_t read_tar_headers(xarc* x)
 		}
 
 		if (th.name[0] == 0)
-			return XARC_NO_MORE_ITEMS;
+		{
+			return xarc_set_error(x, XARC_NO_MORE_ITEMS, 0,
+			 XC("EOF reached on TAR archive"));
+		}
 
 		M_UNTAR(x)->entry_mode = untgz_getoct(th.mode, 8);
 		M_UNTAR(x)->entry_time = untgz_getoct(th.mtime, 12);
