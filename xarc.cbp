@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="xarc" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="7z_min">
+				<Option output="lib/7z_min" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-w" />
+				</Compiler>
+			</Target>
+			<Target title="zlib_min">
+				<Option output="lib/z_min" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-w" />
+				</Compiler>
+			</Target>
+			<Target title="bz2_min">
+				<Option output="lib/bz2_min" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-w" />
+				</Compiler>
+			</Target>
+			<Target title="libxarc">
+				<Option output="lib/xarc" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add directory="src/libxarc" />
+					<Add directory="src/third-party/7z" />
+					<Add directory="src/third-party/zlib" />
+					<Add directory="src/third-party/bzip2" />
+				</Compiler>
+			</Target>
+			<Target title="xtest">
+				<Option output="bin/xtest" prefix_auto="1" extension_auto="1" />
+				<Option external_deps="lib/libz_min.a;lib/libbz2_min.a;lib/lib7z_min.a;lib/libxarc.a;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-Wall" />
+				</Compiler>
+				<Linker>
+					<Add library="xarc" />
+					<Add library="7z_min" />
+					<Add library="bz2_min" />
+					<Add library="z_min" />
+					<Add library="lzma" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="all" targets="7z_min;zlib_min;bz2_min;libxarc;xtest;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-O2" />
+			<Add option="-g" />
+			<Add directory="$(#xz)/include" />
+			<Add directory="include" />
+		</Compiler>
+		<Linker>
+			<Add directory="$(#xz)/lib" />
+			<Add directory="lib" />
+		</Linker>
+		<Unit filename="include/xarc.h">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="include/xarc/types.inc">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="include/xarc/xchar.h">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/build.h">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/decomp_bz2/decomp_bz2.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/decomp_gzip/decomp_gzip.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/decomp_lzma/decomp_lzma.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/decomp_xz/decomp_xz.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/filesys.h">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/filesys/filesys_win32.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/mod_7z/mod_7z.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/mod_minizip/ioapi.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/mod_minizip/iowin32.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/mod_minizip/mod_minizip.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/mod_minizip/unzip.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/mod_untar/mod_untar.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/modules.inc">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/type_constants.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/type_extensions.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/xarc_base.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/xarc_decompress.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/xarc_decompress.h">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/xarc_impl.c">
+			<Option compilerVar="CC" />
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/libxarc/xarc_impl.h">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/third-party/7z/7zBuf.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/7zCrc.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/7zCrcOpt.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/7zDec.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/7zFile.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/7zIn.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/7zStream.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/Bcj2.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/Bra86.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/CpuArch.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/Lzma2Dec.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/LzmaDec.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/7z/Util/7z/7zAlloc.c">
+			<Option compilerVar="CC" />
+			<Option target="7z_min" />
+		</Unit>
+		<Unit filename="src/third-party/bzip2/bzlib.c">
+			<Option compilerVar="CC" />
+			<Option target="bz2_min" />
+		</Unit>
+		<Unit filename="src/third-party/bzip2/crctable.c">
+			<Option compilerVar="CC" />
+			<Option target="bz2_min" />
+		</Unit>
+		<Unit filename="src/third-party/bzip2/decompress.c">
+			<Option compilerVar="CC" />
+			<Option target="bz2_min" />
+		</Unit>
+		<Unit filename="src/third-party/bzip2/huffman.c">
+			<Option compilerVar="CC" />
+			<Option target="bz2_min" />
+		</Unit>
+		<Unit filename="src/third-party/bzip2/randtable.c">
+			<Option compilerVar="CC" />
+			<Option target="bz2_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/adler32.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/crc32.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/gzlib.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/gzread.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/inffast.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/inflate.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/inftrees.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/third-party/zlib/zutil.c">
+			<Option compilerVar="CC" />
+			<Option target="zlib_min" />
+		</Unit>
+		<Unit filename="src/xtest/test.c">
+			<Option compilerVar="CC" />
+			<Option target="xtest" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

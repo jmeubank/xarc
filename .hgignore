@@ -1,0 +1,11 @@
+syntax: glob
+**.o
+**.a
+**.cbTemp
+**.layout
+**.depend
+**.exe
+config.h.in~
+autom4te.cache\**
+doc\**
+test_dir\**
