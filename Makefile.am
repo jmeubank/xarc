@@ -12,20 +12,40 @@ xtest_SOURCES = test_linux.c
 
 libxarc_a_CFLAGS = -I$(srcdir) -I$(srcdir)/7z
 libxarc_a_SOURCES = \
- decomp_bz2/decomp_bz2.c \
- decomp_gzip/decomp_gzip.c \
- decomp_lzma/decomp_lzma.c \
- filesys/filesys_posix.c \
- mod_7z/mod_7z.c \
- mod_minizip/ioapi.c \
- mod_minizip/mod_minizip.c \
- mod_minizip/unzip.c \
  mod_untar/mod_untar.c \
  type_constants.c \
  type_extensions.c \
  xarc_base.c \
  xarc_decompress.c \
  xarc_impl.c
+
+if HAVE_LIBZ
+libxarc_a_SOURCES += \
+ decomp_gzip/decomp_gzip.c \
+ mod_minizip/ioapi.c \
+ mod_minizip/mod_minizip.c \
+ mod_minizip/unzip.c
+endif
+
+if HAVE_BZLIB
+libxarc_a_SOURCES += decomp_bz2/decomp_bz2.c
+endif
+
+if HAVE_LIBLZMA
+libxarc_a_SOURCES += decomp_xz/decomp_xz.c
+endif
+
+if HAVE_7Z
+libxarc_a_SOURCES += \
+ decomp_lzma/decomp_lzma.c \
+ mod_7z/mod_7z.c
+endif
+
+if ON_WIN32_NATIVE
+libxarc_a_SOURCES += filesys/filesys_win32.c
+else
+libxarc_a_SOURCES += filesys/filesys_posix.c
+endif
 
 lib7z_min_a_SOURCES = \
  7z/Util/7z/7zAlloc.c \

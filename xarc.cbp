@@ -81,6 +81,12 @@
 			<Add directory="$(#xz)/lib" />
 			<Add directory="lib" />
 		</Linker>
+		<Unit filename="Makefile.am">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="configure.ac">
+			<Option target="libxarc" />
+		</Unit>
 		<Unit filename="include/xarc.h">
 			<Option target="libxarc" />
 		</Unit>

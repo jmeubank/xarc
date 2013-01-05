@@ -37,6 +37,13 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 noinst_PROGRAMS = xtest$(EXEEXT)
+@HAVE_LIBZ_TRUE@am__append_1 = \
+@HAVE_LIBZ_TRUE@ decomp_gzip/decomp_gzip.c \
+@HAVE_LIBZ_TRUE@ mod_minizip/ioapi.c \
+@HAVE_LIBZ_TRUE@ mod_minizip/mod_minizip.c \
+@HAVE_LIBZ_TRUE@ mod_minizip/unzip.c
+
+@HAVE_7Z_TRUE@am__append_2 = mod_7z/mod_7z.c
 subdir = .
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -64,17 +71,27 @@ am_lib7z_min_a_OBJECTS = 7zAlloc.$(OBJEXT) 7zBuf.$(OBJEXT) \
 lib7z_min_a_OBJECTS = $(am_lib7z_min_a_OBJECTS)
 libxarc_a_AR = $(AR) $(ARFLAGS)
 libxarc_a_LIBADD =
+am__libxarc_a_SOURCES_DIST = decomp_bz2/decomp_bz2.c \
+	decomp_lzma/decomp_lzma.c filesys/filesys_posix.c \
+	mod_untar/mod_untar.c type_constants.c type_extensions.c \
+	xarc_base.c xarc_decompress.c xarc_impl.c \
+	decomp_gzip/decomp_gzip.c mod_minizip/ioapi.c \
+	mod_minizip/mod_minizip.c mod_minizip/unzip.c mod_7z/mod_7z.c
+@HAVE_LIBZ_TRUE@am__objects_1 = libxarc_a-decomp_gzip.$(OBJEXT) \
+@HAVE_LIBZ_TRUE@	libxarc_a-ioapi.$(OBJEXT) \
+@HAVE_LIBZ_TRUE@	libxarc_a-mod_minizip.$(OBJEXT) \
+@HAVE_LIBZ_TRUE@	libxarc_a-unzip.$(OBJEXT)
+@HAVE_7Z_TRUE@am__objects_2 = libxarc_a-mod_7z.$(OBJEXT)
 am_libxarc_a_OBJECTS = libxarc_a-decomp_bz2.$(OBJEXT) \
-	libxarc_a-decomp_gzip.$(OBJEXT) \
 	libxarc_a-decomp_lzma.$(OBJEXT) \
-	libxarc_a-filesys_posix.$(OBJEXT) libxarc_a-mod_7z.$(OBJEXT) \
-	libxarc_a-ioapi.$(OBJEXT) libxarc_a-mod_minizip.$(OBJEXT) \
-	libxarc_a-unzip.$(OBJEXT) libxarc_a-mod_untar.$(OBJEXT) \
+	libxarc_a-filesys_posix.$(OBJEXT) \
+	libxarc_a-mod_untar.$(OBJEXT) \
 	libxarc_a-type_constants.$(OBJEXT) \
 	libxarc_a-type_extensions.$(OBJEXT) \
 	libxarc_a-xarc_base.$(OBJEXT) \
 	libxarc_a-xarc_decompress.$(OBJEXT) \
-	libxarc_a-xarc_impl.$(OBJEXT)
+	libxarc_a-xarc_impl.$(OBJEXT) $(am__objects_1) \
+	$(am__objects_2)
 libxarc_a_OBJECTS = $(am_libxarc_a_OBJECTS)
 PROGRAMS = $(noinst_PROGRAMS)
 am_xtest_OBJECTS = xtest-test_linux.$(OBJEXT)
@@ -91,7 +108,7 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(lib7z_min_a_SOURCES) $(libxarc_a_SOURCES) $(xtest_SOURCES)
-DIST_SOURCES = $(lib7z_min_a_SOURCES) $(libxarc_a_SOURCES) \
+DIST_SOURCES = $(lib7z_min_a_SOURCES) $(am__libxarc_a_SOURCES_DIST) \
 	$(xtest_SOURCES)
 ETAGS = etags
 CTAGS = ctags
@@ -198,22 +215,10 @@ xtest_CFLAGS = -I$(srcdir)
 xtest_LDADD = libxarc.a lib7z_min.a
 xtest_SOURCES = test_linux.c
 libxarc_a_CFLAGS = -I$(srcdir) -I$(srcdir)/7z
-libxarc_a_SOURCES = \
- decomp_bz2/decomp_bz2.c \
- decomp_gzip/decomp_gzip.c \
- decomp_lzma/decomp_lzma.c \
- filesys/filesys_posix.c \
- mod_7z/mod_7z.c \
- mod_minizip/ioapi.c \
- mod_minizip/mod_minizip.c \
- mod_minizip/unzip.c \
- mod_untar/mod_untar.c \
- type_constants.c \
- type_extensions.c \
- xarc_base.c \
- xarc_decompress.c \
- xarc_impl.c
-
+libxarc_a_SOURCES = decomp_bz2/decomp_bz2.c decomp_lzma/decomp_lzma.c \
+	filesys/filesys_posix.c mod_untar/mod_untar.c type_constants.c \
+	type_extensions.c xarc_base.c xarc_decompress.c xarc_impl.c \
+	$(am__append_1) $(am__append_2)
 lib7z_min_a_SOURCES = \
  7z/Util/7z/7zAlloc.c \
  7z/7zBuf.c \
@@ -548,20 +553,6 @@ libxarc_a-decomp_bz2.obj: decomp_bz2/decomp_bz2.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-decomp_bz2.obj `if test -f 'decomp_bz2/decomp_bz2.c'; then $(CYGPATH_W) 'decomp_bz2/decomp_bz2.c'; else $(CYGPATH_W) '$(srcdir)/decomp_bz2/decomp_bz2.c'; fi`
 
-libxarc_a-decomp_gzip.o: decomp_gzip/decomp_gzip.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-decomp_gzip.o -MD -MP -MF $(DEPDIR)/libxarc_a-decomp_gzip.Tpo -c -o libxarc_a-decomp_gzip.o `test -f 'decomp_gzip/decomp_gzip.c' || echo '$(srcdir)/'`decomp_gzip/decomp_gzip.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-decomp_gzip.Tpo $(DEPDIR)/libxarc_a-decomp_gzip.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='decomp_gzip/decomp_gzip.c' object='libxarc_a-decomp_gzip.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-decomp_gzip.o `test -f 'decomp_gzip/decomp_gzip.c' || echo '$(srcdir)/'`decomp_gzip/decomp_gzip.c
-
-libxarc_a-decomp_gzip.obj: decomp_gzip/decomp_gzip.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-decomp_gzip.obj -MD -MP -MF $(DEPDIR)/libxarc_a-decomp_gzip.Tpo -c -o libxarc_a-decomp_gzip.obj `if test -f 'decomp_gzip/decomp_gzip.c'; then $(CYGPATH_W) 'decomp_gzip/decomp_gzip.c'; else $(CYGPATH_W) '$(srcdir)/decomp_gzip/decomp_gzip.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-decomp_gzip.Tpo $(DEPDIR)/libxarc_a-decomp_gzip.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='decomp_gzip/decomp_gzip.c' object='libxarc_a-decomp_gzip.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-decomp_gzip.obj `if test -f 'decomp_gzip/decomp_gzip.c'; then $(CYGPATH_W) 'decomp_gzip/decomp_gzip.c'; else $(CYGPATH_W) '$(srcdir)/decomp_gzip/decomp_gzip.c'; fi`
-
 libxarc_a-decomp_lzma.o: decomp_lzma/decomp_lzma.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-decomp_lzma.o -MD -MP -MF $(DEPDIR)/libxarc_a-decomp_lzma.Tpo -c -o libxarc_a-decomp_lzma.o `test -f 'decomp_lzma/decomp_lzma.c' || echo '$(srcdir)/'`decomp_lzma/decomp_lzma.c
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-decomp_lzma.Tpo $(DEPDIR)/libxarc_a-decomp_lzma.Po
@@ -589,62 +580,6 @@ libxarc_a-filesys_posix.obj: filesys/filesys_posix.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='filesys/filesys_posix.c' object='libxarc_a-filesys_posix.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-filesys_posix.obj `if test -f 'filesys/filesys_posix.c'; then $(CYGPATH_W) 'filesys/filesys_posix.c'; else $(CYGPATH_W) '$(srcdir)/filesys/filesys_posix.c'; fi`
-
-libxarc_a-mod_7z.o: mod_7z/mod_7z.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_7z.o -MD -MP -MF $(DEPDIR)/libxarc_a-mod_7z.Tpo -c -o libxarc_a-mod_7z.o `test -f 'mod_7z/mod_7z.c' || echo '$(srcdir)/'`mod_7z/mod_7z.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_7z.Tpo $(DEPDIR)/libxarc_a-mod_7z.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_7z/mod_7z.c' object='libxarc_a-mod_7z.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_7z.o `test -f 'mod_7z/mod_7z.c' || echo '$(srcdir)/'`mod_7z/mod_7z.c
-
-libxarc_a-mod_7z.obj: mod_7z/mod_7z.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_7z.obj -MD -MP -MF $(DEPDIR)/libxarc_a-mod_7z.Tpo -c -o libxarc_a-mod_7z.obj `if test -f 'mod_7z/mod_7z.c'; then $(CYGPATH_W) 'mod_7z/mod_7z.c'; else $(CYGPATH_W) '$(srcdir)/mod_7z/mod_7z.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_7z.Tpo $(DEPDIR)/libxarc_a-mod_7z.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_7z/mod_7z.c' object='libxarc_a-mod_7z.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_7z.obj `if test -f 'mod_7z/mod_7z.c'; then $(CYGPATH_W) 'mod_7z/mod_7z.c'; else $(CYGPATH_W) '$(srcdir)/mod_7z/mod_7z.c'; fi`
-
-libxarc_a-ioapi.o: mod_minizip/ioapi.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-ioapi.o -MD -MP -MF $(DEPDIR)/libxarc_a-ioapi.Tpo -c -o libxarc_a-ioapi.o `test -f 'mod_minizip/ioapi.c' || echo '$(srcdir)/'`mod_minizip/ioapi.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-ioapi.Tpo $(DEPDIR)/libxarc_a-ioapi.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/ioapi.c' object='libxarc_a-ioapi.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-ioapi.o `test -f 'mod_minizip/ioapi.c' || echo '$(srcdir)/'`mod_minizip/ioapi.c
-
-libxarc_a-ioapi.obj: mod_minizip/ioapi.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-ioapi.obj -MD -MP -MF $(DEPDIR)/libxarc_a-ioapi.Tpo -c -o libxarc_a-ioapi.obj `if test -f 'mod_minizip/ioapi.c'; then $(CYGPATH_W) 'mod_minizip/ioapi.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/ioapi.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-ioapi.Tpo $(DEPDIR)/libxarc_a-ioapi.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/ioapi.c' object='libxarc_a-ioapi.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-ioapi.obj `if test -f 'mod_minizip/ioapi.c'; then $(CYGPATH_W) 'mod_minizip/ioapi.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/ioapi.c'; fi`
-
-libxarc_a-mod_minizip.o: mod_minizip/mod_minizip.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_minizip.o -MD -MP -MF $(DEPDIR)/libxarc_a-mod_minizip.Tpo -c -o libxarc_a-mod_minizip.o `test -f 'mod_minizip/mod_minizip.c' || echo '$(srcdir)/'`mod_minizip/mod_minizip.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_minizip.Tpo $(DEPDIR)/libxarc_a-mod_minizip.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/mod_minizip.c' object='libxarc_a-mod_minizip.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_minizip.o `test -f 'mod_minizip/mod_minizip.c' || echo '$(srcdir)/'`mod_minizip/mod_minizip.c
-
-libxarc_a-mod_minizip.obj: mod_minizip/mod_minizip.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_minizip.obj -MD -MP -MF $(DEPDIR)/libxarc_a-mod_minizip.Tpo -c -o libxarc_a-mod_minizip.obj `if test -f 'mod_minizip/mod_minizip.c'; then $(CYGPATH_W) 'mod_minizip/mod_minizip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/mod_minizip.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_minizip.Tpo $(DEPDIR)/libxarc_a-mod_minizip.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/mod_minizip.c' object='libxarc_a-mod_minizip.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_minizip.obj `if test -f 'mod_minizip/mod_minizip.c'; then $(CYGPATH_W) 'mod_minizip/mod_minizip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/mod_minizip.c'; fi`
-
-libxarc_a-unzip.o: mod_minizip/unzip.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-unzip.o -MD -MP -MF $(DEPDIR)/libxarc_a-unzip.Tpo -c -o libxarc_a-unzip.o `test -f 'mod_minizip/unzip.c' || echo '$(srcdir)/'`mod_minizip/unzip.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-unzip.Tpo $(DEPDIR)/libxarc_a-unzip.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/unzip.c' object='libxarc_a-unzip.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-unzip.o `test -f 'mod_minizip/unzip.c' || echo '$(srcdir)/'`mod_minizip/unzip.c
-
-libxarc_a-unzip.obj: mod_minizip/unzip.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-unzip.obj -MD -MP -MF $(DEPDIR)/libxarc_a-unzip.Tpo -c -o libxarc_a-unzip.obj `if test -f 'mod_minizip/unzip.c'; then $(CYGPATH_W) 'mod_minizip/unzip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/unzip.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-unzip.Tpo $(DEPDIR)/libxarc_a-unzip.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/unzip.c' object='libxarc_a-unzip.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-unzip.obj `if test -f 'mod_minizip/unzip.c'; then $(CYGPATH_W) 'mod_minizip/unzip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/unzip.c'; fi`
 
 libxarc_a-mod_untar.o: mod_untar/mod_untar.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_untar.o -MD -MP -MF $(DEPDIR)/libxarc_a-mod_untar.Tpo -c -o libxarc_a-mod_untar.o `test -f 'mod_untar/mod_untar.c' || echo '$(srcdir)/'`mod_untar/mod_untar.c
@@ -729,6 +664,76 @@ libxarc_a-xarc_impl.obj: xarc_impl.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='xarc_impl.c' object='libxarc_a-xarc_impl.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-xarc_impl.obj `if test -f 'xarc_impl.c'; then $(CYGPATH_W) 'xarc_impl.c'; else $(CYGPATH_W) '$(srcdir)/xarc_impl.c'; fi`
+
+libxarc_a-decomp_gzip.o: decomp_gzip/decomp_gzip.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-decomp_gzip.o -MD -MP -MF $(DEPDIR)/libxarc_a-decomp_gzip.Tpo -c -o libxarc_a-decomp_gzip.o `test -f 'decomp_gzip/decomp_gzip.c' || echo '$(srcdir)/'`decomp_gzip/decomp_gzip.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-decomp_gzip.Tpo $(DEPDIR)/libxarc_a-decomp_gzip.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='decomp_gzip/decomp_gzip.c' object='libxarc_a-decomp_gzip.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-decomp_gzip.o `test -f 'decomp_gzip/decomp_gzip.c' || echo '$(srcdir)/'`decomp_gzip/decomp_gzip.c
+
+libxarc_a-decomp_gzip.obj: decomp_gzip/decomp_gzip.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-decomp_gzip.obj -MD -MP -MF $(DEPDIR)/libxarc_a-decomp_gzip.Tpo -c -o libxarc_a-decomp_gzip.obj `if test -f 'decomp_gzip/decomp_gzip.c'; then $(CYGPATH_W) 'decomp_gzip/decomp_gzip.c'; else $(CYGPATH_W) '$(srcdir)/decomp_gzip/decomp_gzip.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-decomp_gzip.Tpo $(DEPDIR)/libxarc_a-decomp_gzip.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='decomp_gzip/decomp_gzip.c' object='libxarc_a-decomp_gzip.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-decomp_gzip.obj `if test -f 'decomp_gzip/decomp_gzip.c'; then $(CYGPATH_W) 'decomp_gzip/decomp_gzip.c'; else $(CYGPATH_W) '$(srcdir)/decomp_gzip/decomp_gzip.c'; fi`
+
+libxarc_a-ioapi.o: mod_minizip/ioapi.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-ioapi.o -MD -MP -MF $(DEPDIR)/libxarc_a-ioapi.Tpo -c -o libxarc_a-ioapi.o `test -f 'mod_minizip/ioapi.c' || echo '$(srcdir)/'`mod_minizip/ioapi.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-ioapi.Tpo $(DEPDIR)/libxarc_a-ioapi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/ioapi.c' object='libxarc_a-ioapi.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-ioapi.o `test -f 'mod_minizip/ioapi.c' || echo '$(srcdir)/'`mod_minizip/ioapi.c
+
+libxarc_a-ioapi.obj: mod_minizip/ioapi.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-ioapi.obj -MD -MP -MF $(DEPDIR)/libxarc_a-ioapi.Tpo -c -o libxarc_a-ioapi.obj `if test -f 'mod_minizip/ioapi.c'; then $(CYGPATH_W) 'mod_minizip/ioapi.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/ioapi.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-ioapi.Tpo $(DEPDIR)/libxarc_a-ioapi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/ioapi.c' object='libxarc_a-ioapi.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-ioapi.obj `if test -f 'mod_minizip/ioapi.c'; then $(CYGPATH_W) 'mod_minizip/ioapi.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/ioapi.c'; fi`
+
+libxarc_a-mod_minizip.o: mod_minizip/mod_minizip.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_minizip.o -MD -MP -MF $(DEPDIR)/libxarc_a-mod_minizip.Tpo -c -o libxarc_a-mod_minizip.o `test -f 'mod_minizip/mod_minizip.c' || echo '$(srcdir)/'`mod_minizip/mod_minizip.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_minizip.Tpo $(DEPDIR)/libxarc_a-mod_minizip.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/mod_minizip.c' object='libxarc_a-mod_minizip.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_minizip.o `test -f 'mod_minizip/mod_minizip.c' || echo '$(srcdir)/'`mod_minizip/mod_minizip.c
+
+libxarc_a-mod_minizip.obj: mod_minizip/mod_minizip.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_minizip.obj -MD -MP -MF $(DEPDIR)/libxarc_a-mod_minizip.Tpo -c -o libxarc_a-mod_minizip.obj `if test -f 'mod_minizip/mod_minizip.c'; then $(CYGPATH_W) 'mod_minizip/mod_minizip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/mod_minizip.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_minizip.Tpo $(DEPDIR)/libxarc_a-mod_minizip.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/mod_minizip.c' object='libxarc_a-mod_minizip.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_minizip.obj `if test -f 'mod_minizip/mod_minizip.c'; then $(CYGPATH_W) 'mod_minizip/mod_minizip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/mod_minizip.c'; fi`
+
+libxarc_a-unzip.o: mod_minizip/unzip.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-unzip.o -MD -MP -MF $(DEPDIR)/libxarc_a-unzip.Tpo -c -o libxarc_a-unzip.o `test -f 'mod_minizip/unzip.c' || echo '$(srcdir)/'`mod_minizip/unzip.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-unzip.Tpo $(DEPDIR)/libxarc_a-unzip.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/unzip.c' object='libxarc_a-unzip.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-unzip.o `test -f 'mod_minizip/unzip.c' || echo '$(srcdir)/'`mod_minizip/unzip.c
+
+libxarc_a-unzip.obj: mod_minizip/unzip.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-unzip.obj -MD -MP -MF $(DEPDIR)/libxarc_a-unzip.Tpo -c -o libxarc_a-unzip.obj `if test -f 'mod_minizip/unzip.c'; then $(CYGPATH_W) 'mod_minizip/unzip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/unzip.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-unzip.Tpo $(DEPDIR)/libxarc_a-unzip.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_minizip/unzip.c' object='libxarc_a-unzip.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-unzip.obj `if test -f 'mod_minizip/unzip.c'; then $(CYGPATH_W) 'mod_minizip/unzip.c'; else $(CYGPATH_W) '$(srcdir)/mod_minizip/unzip.c'; fi`
+
+libxarc_a-mod_7z.o: mod_7z/mod_7z.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_7z.o -MD -MP -MF $(DEPDIR)/libxarc_a-mod_7z.Tpo -c -o libxarc_a-mod_7z.o `test -f 'mod_7z/mod_7z.c' || echo '$(srcdir)/'`mod_7z/mod_7z.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_7z.Tpo $(DEPDIR)/libxarc_a-mod_7z.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_7z/mod_7z.c' object='libxarc_a-mod_7z.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_7z.o `test -f 'mod_7z/mod_7z.c' || echo '$(srcdir)/'`mod_7z/mod_7z.c
+
+libxarc_a-mod_7z.obj: mod_7z/mod_7z.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -MT libxarc_a-mod_7z.obj -MD -MP -MF $(DEPDIR)/libxarc_a-mod_7z.Tpo -c -o libxarc_a-mod_7z.obj `if test -f 'mod_7z/mod_7z.c'; then $(CYGPATH_W) 'mod_7z/mod_7z.c'; else $(CYGPATH_W) '$(srcdir)/mod_7z/mod_7z.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libxarc_a-mod_7z.Tpo $(DEPDIR)/libxarc_a-mod_7z.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='mod_7z/mod_7z.c' object='libxarc_a-mod_7z.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libxarc_a_CFLAGS) $(CFLAGS) -c -o libxarc_a-mod_7z.obj `if test -f 'mod_7z/mod_7z.c'; then $(CYGPATH_W) 'mod_7z/mod_7z.c'; else $(CYGPATH_W) '$(srcdir)/mod_7z/mod_7z.c'; fi`
 
 xtest-test_linux.o: test_linux.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xtest_CFLAGS) $(CFLAGS) -MT xtest-test_linux.o -MD -MP -MF $(DEPDIR)/xtest-test_linux.Tpo -c -o xtest-test_linux.o `test -f 'test_linux.c' || echo '$(srcdir)/'`test_linux.c
