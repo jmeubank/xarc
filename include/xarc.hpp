@@ -277,21 +277,23 @@ public:
 	 *   callback - Templated callback functor
 	 *
 	 * Returns:
-	 *   The <ExtractArchive> object
+	 *   XARC_OK - If the item was successfully extracted
+	 *   <xarc_result_t> - Any error that may have occurred (see <XARC result
+	 *     codes>)
 	 */
 	template< class UserCallback >
-	ExtractArchive& ExtractItem(const StringType& base_path, uint8_t flags,
+	xarc_result_t ExtractItem(const StringType& base_path, uint8_t flags,
 	 UserCallback& callback);
 
 private:
-	ExtractArchive& ExtractItemUserCallback(const StringType& base_path,
+	xarc_result_t ExtractItemUserCallback(const StringType& base_path,
 	 uint8_t flags, ExtractCallback* callback);
 
 	xarc* m_xarc;
 };
 
 template< class UserCallback >
-ExtractArchive& ExtractArchive::ExtractItem(const StringType& base_path,
+xarc_result_t ExtractArchive::ExtractItem(const StringType& base_path,
  uint8_t flags, UserCallback& callback)
 {
 	ExtractUserCallback< UserCallback > euc(callback);

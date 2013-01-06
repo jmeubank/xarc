@@ -1,5 +1,5 @@
 /* File: xarc/types.inc
- * The central directory for the types of archives XARC recognizes.
+ * The central registry for the types of archives XARC recognizes.
  */
 
 /* Macros: XARC archive types

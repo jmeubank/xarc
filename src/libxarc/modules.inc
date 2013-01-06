@@ -1,9 +1,9 @@
 /* File: libxarc/modules.inc
- * The central directory for the modules XARC uses to handle individual archive
+ * The central registry for the modules XARC uses to handle individual archive
  * types.
  */
 
-/* Macros: XARC modules
+/* Macros: XARC module list
  * A list of all the archive modules included in XARC.
  *
  * mod_minizip - Handles ZIP archives.

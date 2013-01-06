@@ -1,4 +1,4 @@
-/** \file mod_zip.c
+/** \file mod_minizip.c
  *
  * Created: JohnE, 2010-07-19
  */

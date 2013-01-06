@@ -79,7 +79,7 @@
 				<Option type="4" />
 				<Option compiler="gcc" />
 				<ExtraCommands>
-					<Add after="$(#naturaldocs)\NaturalDocs.bat -i $(PROJECTDIR) -o FramedHTML $(PROJECTDIR)\doc -p $(PROJECTDIR)\doc\ndproj" />
+					<Add after="$(#naturaldocs)\NaturalDocs.bat -i $(PROJECTDIR) -o HTML $(PROJECTDIR)\doc -p $(PROJECTDIR)\doc\ndproj" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -125,6 +125,15 @@
 		</Unit>
 		<Unit filename="include/xarc/xchar.h">
 			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="src/doc/extending_xarc.txt">
+			<Option target="docs" />
+		</Unit>
+		<Unit filename="src/doc/xarc_user_api_c.txt">
+			<Option target="docs" />
+		</Unit>
+		<Unit filename="src/doc/xarc_user_api_cxx.txt">
+			<Option target="docs" />
 		</Unit>
 		<Unit filename="src/libxarc/build.h">
 			<Option target="libxarc" />

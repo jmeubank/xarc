@@ -151,7 +151,7 @@ ExtractItemInfo ExtractArchive::GetItemInfo()
 }
 
 
-ExtractArchive& ExtractArchive::ExtractItemUserCallback
+xarc_result_t ExtractArchive::ExtractItemUserCallback
  (const StringType& base_path, uint8_t flags, ExtractCallback* callback)
 {
 	if (!m_xarc)
@@ -160,9 +160,8 @@ ExtractArchive& ExtractArchive::ExtractItemUserCallback
 		 XC("Tried to use ExtractArchive without opening an actual archive")
 		);
 	}
-	xarc_item_extract(m_xarc, base_path.c_str(), flags, XarcCxxExtractCallback,
-	 callback);
-	return *this;
+	return xarc_item_extract(m_xarc, base_path.c_str(), flags,
+	 XarcCxxExtractCallback, callback);
 }
 
 

@@ -66,7 +66,7 @@ int wmain(int argc, wchar_t* argv[])
 				 x.GetErrorDescription().c_str(),
 				 x.GetErrorAdditional().c_str());
 			}
-		} while (x.NextItem() != XARC_NO_MORE_ITEMS);
+		} while (x.NextItem() == XARC_OK);
 	}
 	catch (XARC::XarcException& e)
 	{

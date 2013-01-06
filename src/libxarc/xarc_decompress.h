@@ -1,14 +1,5 @@
 /* File: libxarc/xarc_decompress.h
  * A common interface for decompressing a compressed input file.
- *
- * A decompressor in XARC is a set of functions implementing a common interface
- * that reads decompressed data from a compressed input file. An XARC
- * decompressor must implement an open function (see <decomp_open_func>) and
- * use the <XARC_DEFINE_DECOMPRESSOR> macro to link it to a declared 2-phase
- * archive type from <libxarc/modules.inc>. The open function is responsible for
- * creating an object that extends <xarc_decompress_impl>, and populating the
- * base portion of it with appropriate functions for reading data, closing the
- * stream, and retrieving error text.
  */
 /* Created: JohnE, 2010-08-02 */
 
