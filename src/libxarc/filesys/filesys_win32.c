@@ -1,24 +1,42 @@
-/** \file filesys_win32.c
- *
- * Created: JohnE, 2010-08-02
+/* File: libxarc/filesys_win32.c
  */
+
+/* Copyright 2013 John Eubank.
+
+   This file is part of XARC.
+
+   XARC is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Lesser General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+
+   XARC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+   more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with XARC.  If not, see <http://www.gnu.org/licenses/>.  */
 
 
 #include "filesys.h"
 
+#include <fcntl.h>
+#include <inttypes.h>
+#include <io.h>
+#include <malloc.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <tchar.h>
+#include <time.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <time.h>
-#include <io.h>
-#include <tchar.h>
-#include <malloc.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <inttypes.h>
 #include <xarc/xchar.h>
 
 
+/* Used to convert between Windows time (number of 100-nanosecond intervals
+ * since 1601) and Unix epoch time (number of seconds since 1970)
+ */
 static const uintmax_t SECONDS_1601_1970 = (((uintmax_t)369U * 365U) + 89U)
  * 24U * 60U * 60U;
 

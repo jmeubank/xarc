@@ -1,7 +1,24 @@
 /* File: libxarc/decomp_xz/decomp_xz.c
  * Implements LZMA and XZ decompression.
  */
-/* Created: JohnE, 2013-01-01 */
+
+/* Copyright 2013 John Eubank.
+
+   This file is part of XARC.
+
+   XARC is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Lesser General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+
+   XARC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+   more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with XARC.  If not, see <http://www.gnu.org/licenses/>.  */
+
 
 #include <inttypes.h>
 #include <malloc.h>
@@ -216,9 +233,10 @@ xarc_result_t d_xz_read(xarc* x, xarc_decompress_impl* impl, void* buf,
 		D_XZ(impl)->stream.next_out = buf + *read_inout;
 		D_XZ(impl)->stream.avail_out = to_get - (*read_inout);
 		D_XZ(impl)->stream.total_out = 0uL;
-		/* Run the decompressor. Once it returns, stream->avail_out will contain
-		 * the number of decompressed bytes actually produced, and inbuffered
-		 * will contain the number of bytes consumed from the input buffer.
+		/* Run the decompressor. Once it returns, stream.total_out will contain
+		 * the number of decompressed bytes actually produced, and
+		 * stream.total_in will contain the number of bytes consumed from the
+		 * input buffer.
 		 */
 		lzma_ret ret = lzma_code(&(D_XZ(impl)->stream), action);
 		D_XZ(impl)->inbuf_at += D_XZ(impl)->stream.total_in;

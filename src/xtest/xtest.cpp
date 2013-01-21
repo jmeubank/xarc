@@ -1,7 +1,22 @@
-/** \file xtest.cpp
- *
- * Created: JohnE, 2013-01-05
+/* File: xtest/xtest.cpp
  */
+
+/* Copyright 2013 John Eubank.
+
+   This file is part of XARC.
+
+   XARC is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Lesser General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+
+   XARC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+   more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with XARC.  If not, see <http://www.gnu.org/licenses/>.  */
 
 
 #define WIN32_LEAN_AND_MEAN
@@ -35,7 +50,20 @@ struct testcb
 };
 
 
-#include "mingw-unicode.inc"
+#if _UNICODE
+#ifndef __MSVCRT__
+#error Must link with MSVCRT for Unicode wmain
+#endif
+#include <wchar.h>
+#include <stdlib.h>
+extern int _CRT_glob;
+#ifdef __cplusplus
+extern "C" void __wgetmainargs(int*, wchar_t***, wchar_t***, int, int*);
+#else
+void __wgetmainargs(int*, wchar_t***, wchar_t***, int, int*);
+#endif
+#endif
+
 int wmain(int argc, wchar_t* argv[])
 {
 	if (argc < 2)
@@ -76,3 +104,15 @@ int wmain(int argc, wchar_t* argv[])
 
 	return 0;
 }
+
+#if _UNICODE
+int main()
+{
+	wchar_t** envp;
+	wchar_t** argv;
+	int argc;
+	int si = 0;
+	__wgetmainargs(&argc, &argv, &envp, _CRT_glob, &si);
+	return wmain(argc, argv);
+}
+#endif

@@ -1,0 +1,12 @@
+MODIFIED ZLIB
+
+This directory contains a minimal subset of 'zlib' by Jean-loup Gailly and Mark
+Adler.
+
+This version of zlib is distributed under the terms of the license contained in
+the file 'zlib.h'.
+
+A number of files present in the original zlib release have not been
+redistributed.
+
+None of the redistributed files have been modified.

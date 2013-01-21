@@ -7,9 +7,9 @@
          Copyright (C) 2009-2010 Mathias Svensson ( http://result42.com )
          
          Modifications to mark "opaque" parameter as unused where necessary
-         Copyright (C) 2010 John E. ( http://www.tdragon.net/ )
+         Copyright (C) 2013 John E. ( http://www.tdragon.net/ )
 
-         For more info read MiniZip_info.txt
+         For more info read MiniZip64_info.txt
 
 */
 

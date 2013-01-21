@@ -1,7 +1,23 @@
 /* File: libxarc/xarc_decompress.h
  * A common interface for decompressing a compressed input file.
  */
-/* Created: JohnE, 2010-08-02 */
+
+/* Copyright 2013 John Eubank.
+
+   This file is part of XARC.
+
+   XARC is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Lesser General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+
+   XARC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+   more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with XARC.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #ifndef XARC_DECOMPRESS_H_INC
 #define XARC_DECOMPRESS_H_INC

@@ -88,8 +88,7 @@
 			<Add alias="all" targets="7z_min;zlib_min;bz2_min;libxarc;libxarc_cxx;xtest;docs;" />
 		</VirtualTargets>
 		<Compiler>
-			<Add option="-O2" />
-			<Add option="-g" />
+			<Add option="-Os" />
 			<Add option="-DUNICODE=1" />
 			<Add option="-D_UNICODE=1" />
 			<Add directory="$(#xz)/include" />
@@ -99,11 +98,20 @@
 			<Add directory="$(#xz)/lib" />
 			<Add directory="lib" />
 		</Linker>
+		<Unit filename="COPYING">
+			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="COPYING.LESSER">
+			<Option target="libxarc" />
+		</Unit>
 		<Unit filename="Makefile.am">
 			<Option target="libxarc" />
 		</Unit>
 		<Unit filename="configure.ac">
 			<Option target="libxarc" />
+		</Unit>
+		<Unit filename="doc/ndproj/Menu.txt">
+			<Option target="docs" />
 		</Unit>
 		<Unit filename="include/xarc.h">
 			<Option target="libxarc" />
@@ -127,6 +135,9 @@
 			<Option target="libxarc" />
 		</Unit>
 		<Unit filename="src/doc/extending_xarc.txt">
+			<Option target="docs" />
+		</Unit>
+		<Unit filename="src/doc/introduction.txt">
 			<Option target="docs" />
 		</Unit>
 		<Unit filename="src/doc/xarc_user_api_c.txt">
@@ -320,9 +331,6 @@
 		<Unit filename="src/third-party/zlib/zutil.c">
 			<Option compilerVar="CC" />
 			<Option target="zlib_min" />
-		</Unit>
-		<Unit filename="src/xtest/mingw-unicode.inc">
-			<Option target="xtest" />
 		</Unit>
 		<Unit filename="src/xtest/xtest.cpp">
 			<Option target="xtest" />

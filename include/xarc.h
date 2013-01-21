@@ -1,7 +1,23 @@
 /* File: xarc.h
  * The XARC user interface (C API).
  */
-/* Created: JohnE, 2010-07-19 */
+
+/* Copyright 2013 John Eubank.
+
+   This file is part of XARC.
+
+   XARC is free software: you can redistribute it and/or modify it under the
+   terms of the GNU Lesser General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version.
+
+   XARC is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
+   more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with XARC.  If not, see <http://www.gnu.org/licenses/>.  */
 
 #ifndef XARC_H_INC
 #define XARC_H_INC
@@ -41,7 +57,7 @@ typedef struct
 	uint32_t nano;
 } xarc_time_t;
 /* Callback: xarc_extract_callback
- * A callback function from <xarc_item_extract>, called whenever a file or
+ * A callback function from <xarc_item_extract>, called when a file or
  * directory is created.
  *
  * Parameters:
@@ -76,7 +92,7 @@ typedef struct
 } xarc_item_info;
 
 
-/* Section: Functions */
+/* Section: Global Functions */
 
 
 /* Function: xarc_open
