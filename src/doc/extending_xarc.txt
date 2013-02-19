@@ -1,0 +1,103 @@
+Title: Extending XARC
+See also: <xarc/types.inc>, <libxarc/modules.inc>, <libxarc/xarc_impl.h>,
+<libxarc/xarc_decompress.h>
+
+
+Section: Registries
+*Registering new archive types and handlers*
+
+The XARC source code tries to maintain modularity among the user API, the
+various archive types that need to be supported, and the various subordinate
+libraries used to support them. In addition to the "frontend" user API, XARC
+uses 2 "backend" APIs (one for archive libraries, one for
+decryption/decompression libraries) and 2 registry files that attempt to make
+adding new functionality as straightforward as possible, with a minimum of
+modification to existing code.
+
+<xarc/types.inc> (the "types" registry):
+This registry provides a list of each archive type supported by XARC, and for
+each type a list of recognized filename extensions to use for autodetection.
+
+<libxarc/modules.inc> (the "modules" registry):
+This registry provides a list of each backend archive module used by XARC, and
+for each module a list of archive types (correlated with <xarc/types.inc>) that
+the module can handle.
+
+
+Section: XARC modules
+*Writing a common interface for every archive library*
+
+A module in XARC provides a standard interface for dealing with a specific
+archive format. For example, the "mod_minizip" module handles ZIP archives.
+
+2-phase modules:
+Some modules, such as mod_minizip, have their own specific decoding processes to
+handle decryption and/or decompression as intrinsic parts of the archive format.
+Other modules, such as mod_untar, handle "2-phase" archive types that can have
+different encoding methods applied separately from the archival process. For
+example, a ".tar.gz" tarball is a 2-phase archive type that uses GZIP encoding
+to compress a TAR archive. The "2-phase" modules rely on a separate
+"decompressor" (see <XARC decompressors>) to decode the incoming data and
+produce a stream of unencoded data for the archive module.
+
+Registering a module:
+A module that implements an XARC archive type must create a registry handle in
+its source code, and must be listed in the central module registry.
+ - <XARC_DEFINE_MODULE(name, open_func, extra_size)> - Use this macro in the
+     module's source code to create a module registry handle.
+ - <libxarc/modules.inc> - Add an entry in this file for every new module.
+ - <xarc/types.inc> - Add an entry in this file for every new archive type.
+
+Examples:
+ - <XARC_DEFINE_MODULE(name, open_func, extra_size)> - Includes some example
+     code for implementing a fake module.
+ - The actual module source code (mod_*.c) for any module should be highly
+     documented and should serve as an excellent template for any new module
+     implementations.
+
+
+Section: XARC decompressors
+*Decompressing tarballs and other flexible archive types*
+
+A decompressor in XARC is a set of functions implementing a common interface
+that produces a decoded stream of data from an encoded input file. An XARC
+decompressor is not aware of the "archive" nature of the stream (that is, its
+individual files), but only performs the decompression or decryption process
+before turning the decoded data over to the archive module.
+
+If you declare a new 2-phase handler in <libxarc/modules.inc>, you must create
+or re-use an XARC decompressor that will provide the first phase (decoding) of
+archive extraction. An XARC decompressor must implement an "opener" function and
+link that function to a declared 2-phase archive type.
+ - <decomp_open_func> - The function signature you must follow for opening an
+     encoded input file.
+ - <XARC_DEFINE_DECOMPRESSOR> - Register the <decomp_open_func> in the list of
+     available decompressors.
+ - <libxarc/modules.inc> - Registry of modules in XARC.
+ - <xarc/types.inc> - Registry of types in XARC.
+
+The <decomp_open_func> is responsible for creating an object that extends
+<xarc_decompress_impl>, and for populating the base portion of it with
+appropriate functions for reading data, closing the stream, and retrieving error
+text.
+ - <xarc_decompress_impl> - The remainder of the interface functions in a
+     decompressor.
+
+The individual decompressor implementations in src/libxarc/decomp_* are all
+highly documented and should serve as excellent templates for any new
+decompressor implementations.
+
+
+Section: Filesystem & OS support functions
+*Writing cross-platform code*
+
+Modules and decompressors should use the functions declared in
+<libxarc/filesys.h> to ease the burden of cross-platform programming -- ideally,
+there should be no platform checks in the module or decompressor source code.
+The support functions include:
+ - Timestamp conversion
+ - Filesystem path and directory functions
+ - Filesystem metadata functions
+ - String conversion to native format (somewhat misleadingly referred to as
+     localization; no language translations currently)
+ - Opening files

@@ -1,0 +1,47 @@
+Title: XARC user API (C)
+See also: <xarc.h>
+
+
+Section: Getting Started
+*Using the xarc object and xarc_() functions*
+
+Each archive that you want to work with in XARC is represented by an <xarc>
+object.
+ - <xarc_open> - Open an archive file in the filesystem.
+ - <xarc_close> - Close an open <xarc> object.
+
+Once an <xarc> object is open, the first entry (file or directory) in the
+archive is available to be examined and extracted.
+ - <xarc_item_get_info> - Gets the associated metadata of the current entry,
+     i.e. whether it is a file or directory, what its relative path is within
+     the archive, what its modification timestamp is, etc.
+ - <xarc_item_extract> - Extract the current entry from the archive to the
+     filesystem.
+
+You can seek through the archive one entry at a time. Seeking only happens in
+the forward direction; once you've reached the last entry, you must close the
+<xarc> object.
+ - <xarc_next_item> - Move to the next entry in the archive.
+
+
+Section: Handling Errors
+*XARC's return codes and error strings*
+
+Most XARC C functions return the <xarc_result_t> type. This is an integer code
+indicating success (XARC_OK) or, if an error has occurred, the type of error.
+ - <XARC result codes> - All possible XARC API return codes.
+
+The information about the most recent error is stored with the <xarc> object, so
+you don't necessarily have to process an error at the point of return from the
+XARC function.
+ - <xarc_ok> - Check if any error has occurred for the <xarc> object.
+ - <xarc_error_id> - Get the result code for the most recent occurring error in
+     the <xarc> object.
+ - <xarc_library_error_id> - Get the result code returned by a library that XARC
+     uses, such as ZLIB.
+
+XARC can also provide user-friendly strings describing the error.
+ - <xarc_error_description> - Get a string describing the type of error that has
+     occurred.
+ - <xarc_error_additional> - Get a string containing any specific information
+     about the error.

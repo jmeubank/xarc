@@ -1,0 +1,103 @@
+Format: 1.5
+
+
+Title: XARC
+SubTitle: Unified archive library
+
+Footer: Copyright (C) John Eubank 2013
+Timestamp: Documentation generated yyyy-mm-dd
+#   m     - One or two digit month.  January is "1"
+#   mm    - Always two digit month.  January is "01"
+#   mon   - Short month word.  January is "Jan"
+#   month - Long month word.  January is "January"
+#   d     - One or two digit day.  1 is "1"
+#   dd    - Always two digit day.  1 is "01"
+#   day   - Day with letter extension.  1 is "1st"
+#   yy    - Two digit year.  2006 is "06"
+#   yyyy  - Four digit year.  2006 is "2006"
+#   year  - Four digit year.  2006 is "2006"
+
+
+# --------------------------------------------------------------------------
+# 
+# Cut and paste the lines below to change the order in which your files
+# appear on the menu.  Don't worry about adding or removing files, Natural
+# Docs will take care of that.
+# 
+# You can further organize the menu by grouping the entries.  Add a
+# "Group: [name] {" line to start a group, and add a "}" to end it.
+# 
+# You can add text and web links to the menu by adding "Text: [text]" and
+# "Link: [name] ([URL])" lines, respectively.
+# 
+# The formatting and comments are auto-generated, so don't worry about
+# neatness when editing the file.  Natural Docs will clean it up the next
+# time it is run.  When working with groups, just deal with the braces and
+# forget about the indentation and comments.
+# 
+# --------------------------------------------------------------------------
+
+
+Group: Overview  {
+
+   File: Introduction  (src\doc\introduction.txt)
+   File: XARC user API &lparen;C&rparen;  (src\doc\xarc_user_api_c.txt)
+   File: XARC user API &lparen;C++&rparen;  (src\doc\xarc_user_api_cxx.txt)
+   File: Extending XARC  (src\doc\extending_xarc.txt)
+   }  # Group: Overview
+
+Group: API (include)  {
+
+   Group: xarc  {
+
+      File: extract_helpers.hpp  (include\xarc\extract_helpers.hpp)
+      File: string_type.hpp  (include\xarc\string_type.hpp)
+      File: types.inc  (include\xarc\types.inc)
+      File: xarc_exception.hpp  (include\xarc\xarc_exception.hpp)
+      File: xchar.h  (include\xarc\xchar.h)
+      }  # Group: xarc
+
+   File: xarc.h  (include\xarc.h)
+   File: xarc.hpp  (include\xarc.hpp)
+   }  # Group: API (include)
+
+Group: Implementation (src)  {
+
+   Group: libxarc  {
+
+      File: build.h  (no auto-title, src\libxarc\build.h)
+      File: decomp_bz2/decomp_bz2.c  (no auto-title, src\libxarc\decomp_bz2\decomp_bz2.c)
+      File: decomp_gzip/decomp_gzip.c  (no auto-title, src\libxarc\decomp_gzip\decomp_gzip.c)
+      File: decomp_lzma/decomp_lzma.c  (no auto-title, src\libxarc\decomp_lzma\decomp_lzma.c)
+      File: decomp_xz/decomp_xz.c  (no auto-title, src\libxarc\decomp_xz\decomp_xz.c)
+      File: filesys.h  (no auto-title, src\libxarc\filesys.h)
+      File: filesys_win32.c  (no auto-title, src\libxarc\filesys\filesys_win32.c)
+      File: mod_7z/mod_7z.c  (no auto-title, src\libxarc\mod_7z\mod_7z.c)
+      File: mod_minizip/mod_minizip.c  (no auto-title, src\libxarc\mod_minizip\mod_minizip.c)
+      File: mod_untar/mod_untar.c  (no auto-title, src\libxarc\mod_untar\mod_untar.c)
+      File: type_constants.c  (no auto-title, src\libxarc\type_constants.c)
+      File: type_extensions.c  (no auto-title, src\libxarc\type_extensions.c)
+      File: xarc_base.c  (no auto-title, src\libxarc\xarc_base.c)
+      File: xarc_decompress.c  (no auto-title, src\libxarc\xarc_decompress.c)
+      File: xarc_impl.c  (no auto-title, src\libxarc\xarc_impl.c)
+      File: modules.inc  (no auto-title, src\libxarc\modules.inc)
+      File: xarc_decompress.h  (no auto-title, src\libxarc\xarc_decompress.h)
+      File: xarc_impl.h  (no auto-title, src\libxarc\xarc_impl.h)
+      File: xarc_impl_cxx.cpp  (no auto-title, src\libxarc\xarc_impl_cxx.cpp)
+      }  # Group: libxarc
+
+   }  # Group: Implementation (src)
+
+File: xtest.cpp  (src\xtest\xtest.cpp)
+
+Group: Index  {
+
+   Index: Everything
+   Class Index: Classes
+   File Index: Files
+   Function Index: Functions
+   Macro Index: Macros
+   Type Index: Types
+   Variable Index: Variables
+   }  # Group: Index
+

@@ -7,5 +7,11 @@ syntax: glob
 **.exe
 config.h.in~
 autom4te.cache\**
-doc\**
+doc\files\**
+doc\index\**
+doc\javascript\**
+doc\ndproj\Data\**
+doc\search\**
+doc\styles\**
+doc\index.html
 test_dir\**

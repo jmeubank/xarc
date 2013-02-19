@@ -1,0 +1,57 @@
+Title: XARC user API (C++)
+See also: <xarc.hpp>
+
+
+Section: Getting Started
+*Using the ExtractArchive object*
+
+Each archive that you want to work with in XARC is represented by an object
+descended from the <Archive> class.
+ - <ExtractArchive> - Represents an archive opened for reading and extracting.
+
+You can construct an uninitialized <ExtractArchive> with the default
+constructor, or open an archive file right away.
+ - <ExtractArchive::ExtractArchive> - Constructors.
+ - <Archive::IsOkay> - Check if an archive was opened successfully.
+
+Once an <ExtractArchive> object is opened successfully, the first entry (file or
+directory) in the archive is available to be examined and extracted.
+ - <ExtractArchive::GetItemInfo> - Gets the associated metadata of the current
+     entry, i.e. whether it is a file or directory, what its relative path is
+     within the archive, what its modification timestamp is, etc.
+ - <ExtractArchive::ExtractItem> - Extract the current entry from the archive to
+     the filesystem.
+
+You can seek through the archive one entry at a time. Seeking only happens in
+the forward direction; once you've reached the last entry, you must destroy the
+<ExtractArchive> object.
+ - <ExtractArchive::NextItem> - Move to the next entry in the archive.
+
+
+Section: Handling Errors
+*Return codes, error strings and exceptions*
+
+Methods in the <Archive> class and its descendants may throw exceptions when
+uncommon errors occur.
+ - <XarcException> - The XARC exception class.
+
+However, most XARC C++ methods (including constructors) don't necessarily throw
+exceptions themselves, but instead will mark the archive object as being in an
+errored state. These methods return <xarc_result_t> codes just like the
+functions in the C API.
+ - <XARC result codes> - All possible XARC API return codes.
+
+The <Archive> object also stores information about the most recent error, so
+you don't necessarily have to process an error at the point of return from the
+XARC method.
+ - <Archive::IsOkay> - Check if any error has occurred for the <Archive> object.
+ - <Archive::GetXarcErrorID> - Get the result code for the most recent occurring
+     error in the <Archive> object.
+ - <Archive::GetLibraryErrorID> - Get the result code returned by a library that
+     XARC uses, such as ZLIB.
+
+XARC can also provide user-friendly strings describing the error.
+ - <Archive::GetErrorDescription> - Get a string describing the type of error
+     that has occurred.
+ - <Archive::GetErrorAdditional> - Get a string containing any specific
+     information about the error.

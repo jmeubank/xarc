@@ -1,0 +1,85 @@
+Title: Introduction
+
+
+Section: XARC
+*Distribute archives in any format you like*
+
+ - XARC is a unified API for working with filesystem archives, plus backend
+     implementations for common archive types.
+ - You can link XARC into your program and use it to extract whatever type of
+     archive you've chosen to distrubute -- or any format someone else might
+     throw at it.
+ - As of version 0.1, XARC supports reading and extracting entries from archives
+     in sequential order. Additional functionality will come with future
+     releases.
+ - As of version 0.1, XARC can be used with any program that supports C or C++
+     linkage.
+
+Contrary to expectations, "XARC" is not an acronym. For English speakers, it is
+pronounced "EX-ark", and it should be preceded by "an" rather than "a", for
+example: "an XARC archive".
+
+Supported formats (version 0.1):
+ - ZIP
+ - TAR.GZ, TAR.BZ2, TAR.LZMA, TAR.XZ
+ - 7Z
+
+
+Section: Why XARC?
+*Motivations and design goals*
+
+The singularity:
+There are a _lot_ of different archive formats. Microsoft Windows users are
+familiar with ZIP files, GNU/Linux and other users of Unixy operating systems
+are familiar with tarballs, and every new OS typically introduces another
+preferred method of packing multiple files into one for distribution. Wouldn't
+it be nice if there was a single, unified, standardized, cross-platform format
+for filesystem archives? Let's call it the "archive singularity".
+
+_XARC is not the singularity._
+
+There will always be new compression schemes, new hardware capabilities (or
+limitations), new filesystems, and new _ideas_ arriving at a rate that will
+obsolete any attempt at a unified archive format before it can ever be useful.
+
+Choose any archive format:
+With the archive singularity out of the picture, someone who wants to distribute
+files will have to choose among existing archive formats (or, worse, design
+their own). But there are many factors affecting this decision. One of the key
+questions that decide whether a particular format is suitable is, unfortunately,
+"Does my platform support it?".
+
+_XARC can bring support for any archive format to any platform_.
+
+Abstracted archive workflow:
+No matter what design choices are made in designing an archive format, there are
+still a few workflows that users of the format will have in common with any
+filesystem archive.
+
+ - Unpack the archive to the filesystem
+ - Browse the archive's contents
+ - Create a new archive from multiple files or a subset of the filesystem
+
+Most users will choose a format because they are familiar with it already,
+because it is widely used, or because it has a special feature their application
+requires (e.g. compression or encryption). However, the user probably doesn't
+bring an in-depth knowledge of the format's implementation to the table. They
+merely want to use it like any other archive, according to the above workflows.
+
+_XARC presents a workflow-based user API that can be used with any archive
+format_.
+
+Abstracted archive format APIs:
+Every format is written by a different author and presents a different API to
+its users.
+
+_XARC provides a modular "backend" API to integrate individual archive
+support libraries with minimal effort_.
+
+Decoupled architecture:
+Extending XARC to support new ideas should be easy, and should not require
+familiarity with XARC's entire codebase.
+
+_XARC decouples the user API, the modules used to support different archive
+formats, and the platform-specific functions used to adapt to different
+operating systems_.
