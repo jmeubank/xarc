@@ -260,6 +260,7 @@ xarc_result_t xarc_item_extract(xarc* x, const xchar* base_path, uint8_t flags,
  *   already existed with the same name as the directory
  * (-8) XARC_ERR_NO_BASE_PATH - Tried to extract an archive entry to a base path
  *   that didn't exist
+ * (-9) XARC_ERR_MEMORY - Failed while allocating or freeing memory
  */
 #define XARC_OK								0
 #define XARC_NO_MORE_ITEMS					1
@@ -272,6 +273,7 @@ xarc_result_t xarc_item_extract(xarc* x, const xchar* base_path, uint8_t flags,
 #define XARC_ERR_NOT_VALID_ARCHIVE			-6
 #define XARC_ERR_DIR_IS_FILE				-7
 #define XARC_ERR_NO_BASE_PATH				-8
+#define XARC_ERR_MEMORY						-9
 
 /* Defines: XARC extraction flags
  * Options governing the extraction process.

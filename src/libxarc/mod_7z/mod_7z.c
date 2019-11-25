@@ -26,7 +26,7 @@
 #include <inttypes.h>
 #include <malloc.h>
 #include <string.h>
-#include <Util/7z/7zAlloc.h>
+#include <7zAlloc.h>
 #include "filesys.h"
 #include "xarc_impl.h"
 
@@ -43,7 +43,7 @@ typedef struct
 	/* Field: lookstream
 	 * 7-zip seeking impl.
 	 */
-	CLookToRead lookstream;
+	CLookToRead2 lookstream;
 	/* Field: db
 	 * 7-zip archive database.
 	 */
@@ -155,6 +155,10 @@ static WRes InFile_OpenX(CSzFile *p, const xchar *name)
 }
 
 
+/* Section: Static variables */
+static const size_t kInputBufSize = (size_t) 1 << 18;
+
+
 /* Function: m_7z_open
  * Open a file as a 7-zip archive.
  *
@@ -178,10 +182,22 @@ xarc_result_t m_7z_open(xarc* x, const xchar* file, uint8_t type __attribute__((
 	FileInStream_CreateVTable(&M_7Z(x)->instream);
 
 	/* Set up the 7-zip seek object as a standard LookToRead */
-	LookToRead_CreateVTable(&M_7Z(x)->lookstream, False);
+	LookToRead2_CreateVTable(&M_7Z(x)->lookstream, False);
+	M_7Z(x)->lookstream.buf = NULL;
+
+	/* Allocate memory buffer for decompression */
+    M_7Z(x)->lookstream.buf = (Byte*)ISzAlloc_Alloc(&g_alloc, kInputBufSize);
+    if (!M_7Z(x)->lookstream.buf)
+	{
+    	return xarc_set_error(x, XARC_ERR_MEMORY, 0,
+		 XC("Failed allocating %"PRIu32" bytes of memory for decompression - out of memory?"),
+		 kInputBufSize);
+	}
+
 	/* Use the opened file stream with this seek object */
-	M_7Z(x)->lookstream.realStream = &M_7Z(x)->instream.s;
-	LookToRead_Init(&M_7Z(x)->lookstream);
+	M_7Z(x)->lookstream.bufSize = kInputBufSize;
+	M_7Z(x)->lookstream.realStream = &M_7Z(x)->instream.vt;
+	LookToRead2_Init(&M_7Z(x)->lookstream);
 
 	/* Initialize 7-zip's CRC table */
 	CrcGenerateTable();
@@ -189,7 +205,7 @@ xarc_result_t m_7z_open(xarc* x, const xchar* file, uint8_t type __attribute__((
 	/* Initialize the 7-zip database object */
 	SzArEx_Init(&M_7Z(x)->db);
 	/* Try to open the file stream as a 7-zip archive */
-	if (SzArEx_Open(&M_7Z(x)->db, &M_7Z(x)->lookstream.s, &g_alloc,
+	if (SzArEx_Open(&M_7Z(x)->db, &M_7Z(x)->lookstream.vt, &g_alloc,
 	 &g_alloc_temp) != SZ_OK)
 	{
 		File_Close(&M_7Z(x)->instream.file);
@@ -224,7 +240,7 @@ xarc_result_t m_7z_close(xarc* x)
 xarc_result_t m_7z_next_item(xarc* x)
 {
 	/* If we're already at the last entry, return XARC_NO_MORE_ITEMS */
-	if (M_7Z(x)->entry + 1 >= M_7Z(x)->db.db.NumFiles)
+	if (M_7Z(x)->entry + 1 >= M_7Z(x)->db.NumFiles)
 	{
 		return xarc_set_error(x, XARC_NO_MORE_ITEMS, 0,
 		 XC("End of 7z archive"));
@@ -272,15 +288,15 @@ xarc_result_t m_7z_item_get_info(xarc* x, xarc_item_info* info)
 	info->path = M_7Z(x)->entry_path;
 
 	/* Check if the entry is a directory */
-	if (M_7Z(x)->db.db.Files[M_7Z(x)->entry].IsDir)
+	if (SzArEx_IsDir(&(M_7Z(x)->db), M_7Z(x)->entry))
 		info->properties = XARC_PROP_DIR;
 	else
 		info->properties = 0;
 
 	/* Check if the entry has a modification time defined */
-	if (M_7Z(x)->db.db.Files[M_7Z(x)->entry].MTimeDefined)
+	if (SzBitWithVals_Check(&(M_7Z(x)->db.MTime), M_7Z(x)->entry))
 	{
-		filesys_time_winft((const win_filetime*)&M_7Z(x)->db.db.Files[M_7Z(x)->entry].MTime,
+		filesys_time_winft((const win_filetime*)&M_7Z(x)->db.MTime.Vals[M_7Z(x)->entry],
 		 &info->mod_time);
 	}
 
@@ -306,7 +322,7 @@ xarc_result_t m_7z_item_extract(xarc* x, FILE* to, size_t* written)
 	 * allocating the necessary memory. TODO: This is obviously broken for large
 	 * enough files.
 	 */
-	SRes res = SzArEx_Extract(&M_7Z(x)->db, &M_7Z(x)->lookstream.s,
+	SRes res = SzArEx_Extract(&M_7Z(x)->db, &M_7Z(x)->lookstream.vt,
 	 M_7Z(x)->entry, &M_7Z(x)->block_index, &M_7Z(x)->out_buffer,
 	 &M_7Z(x)->out_buffer_size, &offset, &out_processed, &g_alloc,
 	 &g_alloc_temp);
@@ -337,16 +353,16 @@ xarc_result_t m_7z_item_set_props(xarc* x, const xchar* path)
 	/* If the item has Windows-style attributes stored, apply them (Unix systems
 	 * will reinterpret as much as possible).
 	 */
-	if (M_7Z(x)->db.db.Files[M_7Z(x)->entry].AttribDefined)
+	if (SzBitWithVals_Check(&(M_7Z(x)->db.Attribs), M_7Z(x)->entry))
 	{
 		filesys_set_attributes_win(path,
-		 M_7Z(x)->db.db.Files[M_7Z(x)->entry].Attrib);
+		 M_7Z(x)->db.Attribs.Vals[M_7Z(x)->entry]);
 	}
 	/* If the item has a last-modified time, apply it. */
-	if (M_7Z(x)->db.db.Files[M_7Z(x)->entry].MTimeDefined)
+	if (SzBitWithVals_Check(&(M_7Z(x)->db.MTime), M_7Z(x)->entry))
 	{
 		filesys_set_modtime_winft(path,
-		 (const win_filetime*)&M_7Z(x)->db.db.Files[M_7Z(x)->entry].MTime);
+		 (const win_filetime*)&M_7Z(x)->db.MTime.Vals[M_7Z(x)->entry]);
 	}
 	return XARC_OK;
 }

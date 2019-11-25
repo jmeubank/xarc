@@ -24,7 +24,7 @@
 #include <inttypes.h>
 #include <malloc.h>
 #include <LzmaDec.h>
-#include <Util/7z/7zAlloc.h>
+#include <7zAlloc.h>
 #include "xarc_impl.h"
 #include "xarc_decompress.h"
 
