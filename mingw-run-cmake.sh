@@ -1,10 +1,11 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 export BZIP2_URL="file://C:/Users/joeub/Downloads/bzip2-1.0.8.tar.gz"
 export BZIP2_DIRNAME="bzip2-1.0.8"
 export LZMA_URL="file://C:/Users/joeub/Downloads/lzma1900.7z"
 export LZMA_FILENAME="lzma1900.7z"
 export LZMA_DIRNAME="lzma"
+export XZ_URL="file://C:/Users/joeub/Downloads/xz-5.2.4-windows.7z"
 export ZLIB_URL="file://C:/Users/joeub/Downloads/zlib-1.2.11.tar.xz"
 export ZLIB_DIRNAME="zlib-1.2.11"
 
@@ -13,7 +14,7 @@ mkdir -p extlibs && \
     [ -d "extlibs/$BZIP2_DIRNAME" ] || ( \
       mkdir -p extlibs && \
       cd extlibs && \
-      curl -#L -o- "$BZIP2_URL" | bsdtar -xf - \
+      curl -#L -o- "$BZIP2_URL" | tar -zxf - \
     ) \
   ) && \
   ( \
@@ -28,8 +29,9 @@ mkdir -p extlibs && \
     [ -d "extlibs/$ZLIB_DIRNAME" ] || ( \
       mkdir -p extlibs && \
       cd extlibs && \
-      curl -#L -o- "$ZLIB_URL" | bsdtar -xf - \
+      curl -#L -o- "$ZLIB_URL" | tar -Jxf - \
     ) \
   ) && \
-  cmake -G "MSYS Makefiles" $(dirname "$0") && \
-  make
+  cmake.exe -G "MSYS Makefiles" $(dirname "$0") && \
+  echo "going multithreaded" && \
+  make -j12

@@ -6,7 +6,7 @@ include(ExternalProject)
 
 ExternalProject_Add(
     xz
-    URL file://C:/Users/joeub/Downloads/xz-5.2.4-windows.7z
+    URL $ENV{XZ_URL}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
@@ -17,7 +17,7 @@ set(XZ_SOURCE_DIR ${SOURCE_DIR})
 include_directories(
     "include"
 )
-add_definitions(-DUNICODE -D_UNICODE)
+# add_definitions(-DUNICODE -D_UNICODE)
 
 add_library(
     xarc
@@ -79,7 +79,8 @@ target_include_directories(
     "src/third-party/zlib"
     "${XZ_SOURCE_DIR}/include"
 )
-target_compile_options(xarc PUBLIC "-m32")
+target_compile_options(xarc PUBLIC -m32 -flto)
+add_dependencies(xarc xz)
 
 add_executable(xtest src/xtest/xtest.cpp)
 target_compile_options(xtest PUBLIC "-m32")
