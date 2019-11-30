@@ -3,6 +3,8 @@ setlocal
 
 set "WD=%__CD__%"
 
+set "PATH=C:\TDM-GCC-32\bin;%PATH%"
+
 set "SZ_EXE=C:/Program Files/7-Zip/7z.exe"
 set "BZIP2_URL=file://C:/Users/joeub/Downloads/bzip2-1.0.8.tar.gz"
 set "BZIP2_FILENAME=bzip2-1.0.8.tar.gz"
