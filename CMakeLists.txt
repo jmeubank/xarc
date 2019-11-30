@@ -6,6 +6,8 @@ include_directories(
     "include"
 )
 #add_definitions(-DUNICODE -D_UNICODE)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32 -fno-rtti")
 
 add_library(
     xarc
@@ -74,9 +76,9 @@ target_include_directories(
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{BZIP2_DIRNAME}"
     "src/third-party/zlib"
 )
-target_compile_options(xarc PUBLIC -m32 -flto)
+target_compile_options(xarc PUBLIC -O2 -flto)
 
 add_executable(xtest src/xtest/xtest.cpp)
-target_compile_options(xtest PRIVATE -m32 -g)
-target_link_options(xtest PRIVATE -m32 -g)
+target_compile_options(xtest PRIVATE -g)
+target_link_options(xtest PRIVATE -g)
 target_link_libraries(xtest PRIVATE xarc)
