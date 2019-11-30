@@ -2,22 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 
 project(xarc VERSION 0.1)
 
-include(ExternalProject)
-
-ExternalProject_Add(
-    xz
-    URL $ENV{XZ_URL}
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    INSTALL_COMMAND ""
-)
-ExternalProject_Get_property(xz SOURCE_DIR)
-set(XZ_SOURCE_DIR ${SOURCE_DIR})
-
 include_directories(
     "include"
 )
-# add_definitions(-DUNICODE -D_UNICODE)
+#add_definitions(-DUNICODE -D_UNICODE)
 
 add_library(
     xarc
@@ -46,6 +34,7 @@ add_library(
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/7zDec.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/7zFile.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/7zStream.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Alloc.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Bcj2.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Bra.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Bra86.c"
@@ -54,6 +43,13 @@ add_library(
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Delta.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Lzma2Dec.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/LzmaDec.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/MtDec.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Sha256.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Threads.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/Xz.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/XzCrc64.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/XzCrc64Opt.c"
+    "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C/XzDec.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{BZIP2_DIRNAME}/blocksort.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{BZIP2_DIRNAME}/bzlib.c"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{BZIP2_DIRNAME}/compress.c"
@@ -71,20 +67,16 @@ add_library(
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{ZLIB_DIRNAME}/zutil.c"
 )
 target_include_directories(
-    xarc PUBLIC
+    xarc PRIVATE
     "src/libxarc"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{LZMA_DIRNAME}/C"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{ZLIB_DIRNAME}"
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{BZIP2_DIRNAME}"
     "src/third-party/zlib"
-    "${XZ_SOURCE_DIR}/include"
 )
 target_compile_options(xarc PUBLIC -m32 -flto)
-add_dependencies(xarc xz)
 
 add_executable(xtest src/xtest/xtest.cpp)
-target_compile_options(xtest PUBLIC "-m32")
-target_link_options(xtest PUBLIC "-m32")
-target_link_directories(xtest PUBLIC "${XZ_SOURCE_DIR}/bin_i686-sse2")
-target_link_libraries(xtest PUBLIC xarc liblzma.a)
-add_dependencies(xtest xz)
+target_compile_options(xtest PRIVATE -m32 -g)
+target_link_options(xtest PRIVATE -m32 -g)
+target_link_libraries(xtest PRIVATE xarc)

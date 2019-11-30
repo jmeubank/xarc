@@ -5,7 +5,6 @@ export BZIP2_DIRNAME="bzip2-1.0.8"
 export LZMA_URL="file://C:/Users/joeub/Downloads/lzma1900.7z"
 export LZMA_FILENAME="lzma1900.7z"
 export LZMA_DIRNAME="lzma"
-export XZ_URL="file://C:/Users/joeub/Downloads/xz-5.2.4-windows.7z"
 export ZLIB_URL="file://C:/Users/joeub/Downloads/zlib-1.2.11.tar.xz"
 export ZLIB_DIRNAME="zlib-1.2.11"
 

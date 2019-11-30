@@ -87,7 +87,8 @@ XARC_DEFINE_DECOMPRESSOR(decomp_lzma, d_lzma_open)
 /* Variable: g_Alloc
  * 7-zip memory allocation functions.
  */
-ISzAlloc g_Alloc = { SzAlloc, SzFree };
+static ISzAlloc g_Alloc = { SzAlloc, SzFree };
+
 /* Variable: lzma_error_strings
  * 7-zip error strings.
  */
