@@ -27,21 +27,34 @@
 #include <xarc/xarc_exception.hpp>
 
 
+#if _UNICODE
+#	define xprintf wprintf
+#	define xctime _wctime
+#	define fxprintf fwprintf
+#	define xmain wmain
+#else
+#	define xprintf printf
+#	define xctime ctime
+#	define fxprintf fprintf
+#	define xmain main
+#endif
+
+
 struct testcb
 {
 	XARC::ExtractArchive* archive;
 
-	void operator () (const std::wstring& item, uint8_t flags)
+	void operator () (const XARC::StringType& item, uint8_t flags)
 	{
 		try
 		{
 			XARC::ExtractItemInfo xi = archive->GetItemInfo();
 			time_t t = xi.GetModTime().first;
-			wprintf(L"* %s - %s", item.c_str(), _wctime(&t));
+			xprintf(XC("* %s - %s"), item.c_str(), xctime(&t));
 		}
 		catch (XARC::XarcException& e)
 		{
-			fwprintf(stderr, L"%s\n", e.GetString().c_str());
+			fxprintf(stderr, XC("%s\n"), e.GetString().c_str());
 		}
 		catch (...)
 		{
@@ -51,24 +64,29 @@ struct testcb
 
 
 #if _UNICODE
-#ifndef __MSVCRT__
-#error Must link with MSVCRT for Unicode wmain
-#endif
-#include <wchar.h>
-#include <stdlib.h>
-extern int _CRT_glob;
-#ifdef __cplusplus
-extern "C" void __wgetmainargs(int*, wchar_t***, wchar_t***, int, int*);
-#else
-void __wgetmainargs(int*, wchar_t***, wchar_t***, int, int*);
-#endif
-#endif
 
-int wmain(int argc, wchar_t* argv[])
+#	ifndef __MSVCRT__
+#		error Must link with MSVCRT for Unicode wmain
+#	endif
+
+#	include <wchar.h>
+#	include <stdlib.h>
+
+	extern int _CRT_glob;
+
+#	ifdef __cplusplus
+		extern "C" void __wgetmainargs(int*, wchar_t***, wchar_t***, int, int*);
+#	else
+		void __wgetmainargs(int*, wchar_t***, wchar_t***, int, int*);
+#	endif
+
+#endif /* defined(_UNICODE) */
+
+int xmain(int argc, xchar* argv[])
 {
 	if (argc < 2)
 	{
-		fwprintf(stderr, L"Please provide an archive to test\n");
+		fxprintf(stderr, XC("Please provide an archive to test\n"));
 		return -1;
 	}
 
@@ -77,7 +95,7 @@ int wmain(int argc, wchar_t* argv[])
 		XARC::ExtractArchive x(argv[1]);
 		if (!x.IsOkay())
 		{
-			fwprintf(stderr, L"(%d) %s\n    %s\n", x.GetLibraryErrorID(),
+			fxprintf(stderr, XC("(%d) %s\n    %s\n"), x.GetLibraryErrorID(),
 			 x.GetErrorDescription().c_str(), x.GetErrorAdditional().c_str());
 			return -1;
 		}
@@ -86,11 +104,11 @@ int wmain(int argc, wchar_t* argv[])
 		tcb.archive = &x;
 		do
 		{
-			x.ExtractItem(L"C:\\JDevel\\xarc\\bin\\test_dir",
+			x.ExtractItem(XC("C:\\Users\\joeub\\xarc\\build-cmd\\test_dir"),
 			 XARC_XFLAG_CALLBACK_DIRS, tcb);
 			if (!x.IsOkay())
 			{
-				fwprintf(stderr, L"%s\n    %s\n",
+				fxprintf(stderr, XC("%s\n    %s\n"),
 				 x.GetErrorDescription().c_str(),
 				 x.GetErrorAdditional().c_str());
 			}
@@ -98,7 +116,7 @@ int wmain(int argc, wchar_t* argv[])
 	}
 	catch (XARC::XarcException& e)
 	{
-		fwprintf(stderr, L"%s\n", e.GetString().c_str());
+		fxprintf(stderr, XC("%s\n"), e.GetString().c_str());
 		return -1;
 	}
 
@@ -106,13 +124,13 @@ int wmain(int argc, wchar_t* argv[])
 }
 
 #if _UNICODE
-int main()
-{
-	wchar_t** envp;
-	wchar_t** argv;
-	int argc;
-	int si = 0;
-	__wgetmainargs(&argc, &argv, &envp, _CRT_glob, &si);
-	return wmain(argc, argv);
-}
+	int main()
+	{
+		wchar_t** envp;
+		wchar_t** argv;
+		int argc;
+		int si = 0;
+		__wgetmainargs(&argc, &argv, &envp, _CRT_glob, &si);
+		return wmain(argc, argv);
+	}
 #endif
