@@ -125,6 +125,16 @@ xarc_result_t d_lzma_open(xarc* x, const xchar* path,
 		 path);
 	}
 
+	/* Allocate and fill out a d_lzma_impl object */
+	d_lzma_impl* i = (d_lzma_impl*)malloc(sizeof(d_lzma_impl));
+	i->base.close = d_lzma_close;
+	i->base.read = d_lzma_read;
+	i->base.error_desc = d_lzma_error_desc;
+	i->infile = 0;
+	i->inbuf_at = 0;
+	i->inbuf_filled = 0;
+	*impl = (xarc_decompress_impl*)i;
+
 	/* Read the LZMA header -- stream properties plus 8 bytes uncompressed size
 	 */
 	uint8_t lzheader[LZMA_PROPS_SIZE + 8];
@@ -148,15 +158,8 @@ xarc_result_t d_lzma_open(xarc* x, const xchar* path,
 	LzmaDec_Init(&lzdecomp);
 
 	/* Allocate and fill out a d_lzma_impl object */
-	d_lzma_impl* i = (d_lzma_impl*)malloc(sizeof(d_lzma_impl));
-	i->base.close = d_lzma_close;
-	i->base.read = d_lzma_read;
-	i->base.error_desc = d_lzma_error_desc;
 	i->infile = infile;
 	i->lzdecomp = lzdecomp;
-	i->inbuf_at = 0;
-	i->inbuf_filled = 0;
-	*impl = (xarc_decompress_impl*)i;
 
 	return XARC_OK;
 }

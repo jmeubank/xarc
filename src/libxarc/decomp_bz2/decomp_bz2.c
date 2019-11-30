@@ -95,6 +95,18 @@ xarc_result_t d_bz2_open(xarc* x, const xchar* path, xarc_decompress_impl** impl
 		 path);
 	}
 
+	/* Allocate and fill out a d_bz2_impl object */
+	d_bz2_impl* i = (d_bz2_impl*)malloc(sizeof(d_bz2_impl));
+	i->base.close = d_bz2_close;
+	i->base.read = d_bz2_read;
+	i->base.error_desc = d_bz2_error_desc;
+	i->infile = 0;
+	i->inbz2 = 0;
+#if XARC_NATIVE_WCHAR
+	i->localized_error = 0;
+#endif
+	*impl = (xarc_decompress_impl*)i;
+
 	/* Open a BZIP2 decompression stream on the input file */
 	int32_t bzerror;
 	BZFILE* inbz2 = BZ2_bzReadOpen(&bzerror, infile, 0, 0, 0, 0);
@@ -107,17 +119,8 @@ xarc_result_t d_bz2_open(xarc* x, const xchar* path, xarc_decompress_impl** impl
 		return XARC_DECOMPRESS_ERROR;
 	}
 
-	/* Allocate and fill out a d_bz2_impl object */
-	d_bz2_impl* i = (d_bz2_impl*)malloc(sizeof(d_bz2_impl));
-	i->base.close = d_bz2_close;
-	i->base.read = d_bz2_read;
-	i->base.error_desc = d_bz2_error_desc;
 	i->infile = infile;
 	i->inbz2 = inbz2;
-#if XARC_NATIVE_WCHAR
-	i->localized_error = 0;
-#endif
-	*impl = (xarc_decompress_impl*)i;
 
 	return XARC_OK;
 }
