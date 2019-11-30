@@ -109,7 +109,7 @@ xarc_result_t d_xz_open(xarc* x, const xchar* path,
 		 path);
 	}
 
-	/* Open an decompression stream */
+	/* Open a decompression stream */
 	CXzUnpacker xzunpack;
 	XzUnpacker_Construct(&xzunpack, &g_Alloc);
 	XzUnpacker_Init(&xzunpack);
