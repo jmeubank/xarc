@@ -139,6 +139,7 @@ xarc_result_t ExtractArchive::OpenFile(const xchar* file, uint8_t type)
 	if (m_xarc)
 		xarc_close(m_xarc);
 	m_xarc = xarc_open(file, type);
+	return xarc_error_id(m_xarc);
 }
 
 xarc_result_t ExtractArchive::NextItem()
