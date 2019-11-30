@@ -79,6 +79,6 @@ target_include_directories(
 target_compile_options(xarc PUBLIC -O2 -flto)
 
 add_executable(xtest src/xtest/xtest.cpp)
-target_compile_options(xtest PRIVATE -g)
-target_link_options(xtest PRIVATE -g)
+target_compile_options(xtest PRIVATE -O2 -flto)
+target_link_options(xtest PRIVATE -O2 -flto)
 target_link_libraries(xtest PRIVATE xarc)
