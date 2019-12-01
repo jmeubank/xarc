@@ -23,7 +23,9 @@
 #include <inttypes.h>
 #include <malloc.h>
 #include <7zAlloc.h>
+#include <7zCrc.h>
 #include <Xz.h>
+#include <XzCrc64.h>
 #include "xarc_impl.h"
 #include "xarc_decompress.h"
 
