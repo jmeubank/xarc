@@ -32,6 +32,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <xarc/xchar.h>
+#include <direct.h>
 
 
 /* Used to convert between Windows time (number of 100-nanosecond intervals
