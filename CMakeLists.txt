@@ -2,12 +2,22 @@ cmake_minimum_required(VERSION 3.10)
 
 project(xarc VERSION 0.1)
 
+#set(CMAKE_AR "gcc-ar")
+#set(CMAKE_RANLIB "gcc-ranlib")
+set(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+set(CMAKE_C_ARCHIVE_FINISH "")
+set(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
+set(CMAKE_CXX_ARCHIVE_FINISH "")
+set(CMAKE_CXX_LINK_EXECUTABLE
+    "<CMAKE_CXX_COMPILER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET> <LINK_LIBRARIES>")
+
+
 include_directories(
     "include"
 )
 #add_definitions(-DUNICODE -D_UNICODE)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32 -fno-rtti")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
 
 add_library(
     xarc
@@ -76,9 +86,9 @@ target_include_directories(
     "${CMAKE_BINARY_DIR}/extlibs/$ENV{BZIP2_DIRNAME}"
     "src/third-party/zlib"
 )
-target_compile_options(xarc PUBLIC -O2 -flto)
+target_compile_options(xarc PUBLIC -O2 -flto -m32)
 
 add_executable(xtest src/xtest/xtest.cpp)
-target_compile_options(xtest PRIVATE -O2 -flto)
-target_link_options(xtest PRIVATE -O2 -flto)
+target_compile_options(xtest PRIVATE -O2 -flto -m32)
+target_link_options(xtest PRIVATE -O2 -flto -m32)
 target_link_libraries(xtest PRIVATE xarc)
